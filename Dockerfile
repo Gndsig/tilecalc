@@ -46,6 +46,6 @@ ENTRYPOINT [ "/usr/bin/tini", "--" ]
 CMD [ "/bin/bash" ]
 
 # config git after make directory
-#git config --global user.name "Gndsig"
-#git config --global user.email hiyokomamitsu@gmail.com
+#git config --global user.name 
+#git config --global user.email 
 #git clone https://github.com/Gndsig/linking_polyline_image

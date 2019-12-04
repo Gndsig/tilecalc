@@ -168,28 +168,3 @@ image_coord4
 
 
 
-#%%
-from shapely.geometry import LineString
-import shapely.wkt
-
-line_sample1 = 'LINESTRING(139.07730102539062 36.00022956359412, 139.0814208984375 35.98022880246021)'
-ls1 = shapely.wkt.loads(line_sample1)
-ls2 = LineString([(139.07730102539062,36.00022956359412),(139.0814208984375,35.98022880246021),(139.07867431640625, 35.99356320664446),(139.07455444335938, 35.9913409624497)])
-
-#%%
-ls2.bounds
-
-#%%
-ls2.area
-ls2.bounds
-ls2.length
-ls2.geom_type
-ls2.distance
-ls2.coords
-
-# %%
-for x in ls2.coords:
-    print(x)
-
-#%%
-

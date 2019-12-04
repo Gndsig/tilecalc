@@ -3,19 +3,31 @@ import numpy as np
 from shapely.geometry import LineString
 import shapely.wkt
 
-class TileSegment:
-    def __init__(self):
-        # type judgment
-        
-        pass
-    
-    
+line_sample1 = 'LINESTRING(139.07730102539062 36.00022956359412, 139.0814208984375 35.98022880246021)'
+ls1 = shapely.wkt.loads(line_sample1)
+ls2 = LineString([(139.07730102539062,36.00022956359412),(139.0814208984375,35.98022880246021),(139.07867431640625, 35.99356320664446),(139.07455444335938, 35.9913409624497)])
 
+#%%
+ls2.bounds
+
+#%%
+# sample
+ls2.area
+ls2.bounds
+ls2.length
+ls2.geom_type
+ls2.distance
+ls2.coords
+for x in ls2.coords:
+    print(x)
+
+    
+#%%
 class LinkingPolylineImage:
     
     # constructor for WKT
     def __init__(self, wkt_polyline):
-        self.wkt_polyline = wkt_polyline
+        self.polyline = wkt_polyline
     
     # ------------- convert latitude and longitude to XYZtile or vice versa ----------------
     @classmethod
@@ -158,17 +170,17 @@ class LinkingPolylineImage:
     def overlappingTileSegments(self, zoom, mbr_type):
         pass
 
-# %%
-zoom=18
-coordinate=(140.087099, 36.104665)
-tile = LinkingPolylineTile.latlng_to_tile(coordinate, zoom, is_segment=True)
-tile
-# %%
-coord = LinkingPolylineTile.tile_to_latlng(tile)
-coord
 
 #%%
-tile
+#def xy_aligned(self, minimum=None):
 
+self = LinkingPolylineImage(ls2)
+
+minimun=None
 #%%
-coord
+self.polyline
+
+
+# %%
+bounds = self.polyline.bounds
+
