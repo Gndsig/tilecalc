@@ -30,13 +30,12 @@ RUN pip install --upgrade pip \
     && pip install Pillow \
     && pip install ipython[all] \
     && pip install jupyter \
-    && pip install shapely[vectorized] \
-
+    && pip install shapely[vectorized]
 
     
 WORKDIR /workdir
 
-# コンテナ側のリッスンポート番号
+# setting for jupyter
 EXPOSE 8888
 
 ENV TINI_VERSION v0.16.1
@@ -45,3 +44,8 @@ RUN chmod +x /usr/bin/tini
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 CMD [ "/bin/bash" ]
+
+# config git after make directory
+#git config --global user.name "Gndsig"
+#git config --global user.email hiyokomamitsu@gmail.com
+#git clone https://github.com/Gndsig/linking_polyline_image
