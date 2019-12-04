@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block extrajs %}
+<script src="http://openlayers.org/api/OpenLayers.js"></script>
+
+
+<script type="text/javascript">
+
+var map,alpha_shapes,vectors,highlightCtrl,selectCtrl,report;
+
+var status = false;
+
+function load_shapes(qs){
+    if (map.getLayersByName('Vectors').length > 0){
+      map.removeLayer(vectors);
+    }
+    var url = '/shapes/'
+    if (qs) {
+      url += '?qs=' + qs
+    }
+    
+    vectors = new OpenLayers.Layer.GML('Vectors', url, {
+        projection: new OpenLayers.Projection("EPSG:4326"),
+        format: OpenLayers.Format.GeoJSON,
+        //rendererOptions: {yOrdering: true}
+    });
+    
+    status = true;
+    
+    
+    map.addLayer(vectors);
+    add_select(vectors);
+    vectors.events.register("loadend", vectors, check_feat);
+}
+
+function check_feat() {
+    if (vectors.features.length == 0 && status) {
+      alert('Query returned no features!.')
+    }
+}
+
+function setBounds(){
+  var vector_extent = new OpenLayers.Bounds(vectors.getExtent().toBBOX());
+  map.zoomToExtent(vector_extent);  
+}
+
+function add_select(layer)
+{
+
+    report = function(e) {
+        html = '<p><a href="/databrowse/clustr/alphashapes/objects/' + e.feature.attributes.id + '/" target="_blank">'
+        html += e.feature.attributes.label + '</a></p>';
+        document.getElementById('explanation').innerHTML = html;
+    };
+
+    highlightCtrl = new OpenLayers.Control.SelectFeature(layer, {
+        hover: true,
+        highlightOnly: true,
+        renderIntent: "temporary",
+        eventListeners: {
+            beforefeaturehighlighted: report,
+            featurehighlighted: report,
+            featureunhighlighted: report
+        }
+    });
+     
+    selectCtrl = new OpenLayers.Control.SelectFeature(layer,
+        {clickout: true}
+    );
+
+    map.addControl(highlightCtrl);
+    map.addControl(selectCtrl);
+
+    highlightCtrl.activate();
+    selectCtrl.activate(); 
+}
+
+function init() {
+    
+    // Options for World Map in Google Spherical Mercator Projection
+    var options = { 
+        maxResolution: 156543.0339,
+        units: 'm',
+        projection: new OpenLayers.Projection("EPSG:900913"),
+        displayProjection: new OpenLayers.Projection("EPSG:4326"),
+        maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
+        };
+        
+    map = new OpenLayers.Map("map", options);
+    
+    osm = new OpenLayers.Layer.OSM("OpenStreetMap Tiles");
+    
+    
+    map.addLayers([osm]);
+
+    load_shapes();
+
+    alpha_shapes = new OpenLayers.Layer.WMS("Mapnik via Django View","/tiles/", {layers:'shapes',format:'image/png'},     
+        {
+        gutter:0,
+        buffer:0,
+        ratio:1,
+        wrapDateLine: true,
+        isBaselayer:true,
+        singleTile:true,
+        transitionEffect:'resize'
+        } 
+        );
+    
+    map.addLayer(alpha_shapes);
+
+    map.addControl(new OpenLayers.Control.LayerSwitcher());    
+    map.addControl(new OpenLayers.Control.Scale());
+    map.addControl(new OpenLayers.Control.MousePosition());
+    map.addControl(new OpenLayers.Control.Navigation()); 
+    map.addControl(new OpenLayers.Control.PanZoom());
+
+   
+    add_select(vectors);
+    
+    map.zoomToMaxExtent();
+    
+    vectors.events.register("loadend", vectors, setBounds);
+    
+    //map.zoomToMaxExtent();
+    //map.zoomToExtent(new OpenLayers.Bounds(-13679424.291773,6194203.572648,-13660983.858703,6207312.522997));
+    //map.zoomTo(13);
+
+
+}
+</script>
+{% endblock %}
+
+{% block body_load %}onload="init()"{% endblock %}
+
+{% block content %}
+
+<div id="summary">
+  <h1>Alpha Shapes!</h1>
+
+<input type="search" autosave="bsn_srch" results="50" size="100" id="q" value="" onchange="load_shapes(this.value);"><button onclick="load_shapes(document.getElementById('q').value);" type="submit"> Yikes!</button>
+<br />
+<p>Try typing python here like: AlphaShapes.objects.filter(poly__intersects=Point(-122.35,48.5)) </p>
+</div>
+
+
+<div id="map"></div>
+
+<div id="explanation">
+</div>
+
+
+{% endblock %}

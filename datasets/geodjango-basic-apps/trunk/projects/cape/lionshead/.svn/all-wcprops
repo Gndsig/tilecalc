@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/120/trunk/projects/cape/lionshead
+END
+admin.py
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/70/trunk/projects/cape/lionshead/admin.py
+END
+views.py
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/120/trunk/projects/cape/lionshead/views.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/65/trunk/projects/cape/lionshead/__init__.py
+END
+models.py
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/66/trunk/projects/cape/lionshead/models.py
+END

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/clustr
+END
+models.py
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/clustr/models.py
+END
+urls.py
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/clustr/urls.py
+END
+admin.py
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/clustr/admin.py
+END
+views.py
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/clustr/views.py
+END
+shortcuts.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/clustr/shortcuts.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/clustr/__init__.py
+END

@@ -1,0 +1,3 @@
+#!/bin/bash
+# for vscode run
+docker run -it -p 8888:8888 --name linking --mount type=bind,src=`pwd`,dst=/workdir linking-image

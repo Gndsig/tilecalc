@@ -1,0 +1,34 @@
+
+<!-- generated with Quantumnik http://bitbucket.org/springmeyer/quantumnik/ -->
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<Map srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs " bgcolor="rgba(0,0,0,0)">
+    <Style name="style">
+        <Rule>
+            <PolygonSymbolizer>
+                <CssParameter name="fill">rgb(1,34,193)</CssParameter>
+                <CssParameter name="fill-opacity">0.2509804</CssParameter>
+            </PolygonSymbolizer>
+            <LineSymbolizer>
+                <CssParameter name="stroke">rgb(215,48,39)</CssParameter>
+                <CssParameter name="stroke-width">0.96</CssParameter>
+                <CssParameter name="stroke-opacity">0.2509804</CssParameter>
+                <CssParameter name="stroke-linejoin">bevel</CssParameter>
+                <CssParameter name="stroke-linecap">square</CssParameter>
+            </LineSymbolizer>
+        </Rule>
+    </Style>
+    <Layer name="alpha" srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs " status="1" clear_label_cache="0" queryable="1">
+        <StyleName>style</StyleName>
+        <Datasource>
+            <Parameter name="dbname">clustr</Parameter>
+            <Parameter name="estimate_extent">0</Parameter>
+            <Parameter name="extent">-166.568450928,-27.0901279449,179.197494507,71.3437271118</Parameter>
+            <Parameter name="geometry_field">poly</Parameter>
+            <Parameter name="table">clustr_alphashapes</Parameter>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">postgres</Parameter>
+        </Datasource>
+    </Layer>
+</Map>

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/48/trunk/projects/geoip
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/31/trunk/projects/geoip/__init__.py
+END
+settings.py
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/45/trunk/projects/geoip/settings.py
+END
+urls.py
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/31/trunk/projects/geoip/urls.py
+END
+readme
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/48/trunk/projects/geoip/readme
+END
+manage.py
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/31/trunk/projects/geoip/manage.py
+END

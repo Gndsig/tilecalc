@@ -1,0 +1,221 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/!svn/ver/12434/trunk/openlayers/tests/Control
+END
+Panel.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/11965/trunk/openlayers/tests/Control/Panel.html
+END
+Navigation.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/11961/trunk/openlayers/tests/Control/Navigation.html
+END
+Geolocate.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/11505/trunk/openlayers/tests/Control/Geolocate.html
+END
+TouchNavigation.html
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/11695/trunk/openlayers/tests/Control/TouchNavigation.html
+END
+ModifyFeature.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/12248/trunk/openlayers/tests/Control/ModifyFeature.html
+END
+OverviewMap.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/11162/trunk/openlayers/tests/Control/OverviewMap.html
+END
+PanZoomBar.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/11746/trunk/openlayers/tests/Control/PanZoomBar.html
+END
+Button.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/11162/trunk/openlayers/tests/Control/Button.html
+END
+DragPan.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/11162/trunk/openlayers/tests/Control/DragPan.html
+END
+Graticule.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/11162/trunk/openlayers/tests/Control/Graticule.html
+END
+WMTSGetFeatureInfo.html
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/11162/trunk/openlayers/tests/Control/WMTSGetFeatureInfo.html
+END
+Permalink.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/11170/trunk/openlayers/tests/Control/Permalink.html
+END
+PanZoom.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/11365/trunk/openlayers/tests/Control/PanZoom.html
+END
+LayerSwitcher.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/12048/trunk/openlayers/tests/Control/LayerSwitcher.html
+END
+ArgParser.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/11170/trunk/openlayers/tests/Control/ArgParser.html
+END
+TransformFeature.html
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/11958/trunk/openlayers/tests/Control/TransformFeature.html
+END
+Scale.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/11272/trunk/openlayers/tests/Control/Scale.html
+END
+DragFeature.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/11888/trunk/openlayers/tests/Control/DragFeature.html
+END
+GetFeature.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/11162/trunk/openlayers/tests/Control/GetFeature.html
+END
+SelectFeature.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/11633/trunk/openlayers/tests/Control/SelectFeature.html
+END
+PanPanel.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/11162/trunk/openlayers/tests/Control/PanPanel.html
+END
+WMSGetFeatureInfo.html
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/12434/trunk/openlayers/tests/Control/WMSGetFeatureInfo.html
+END
+ScaleLine.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/11162/trunk/openlayers/tests/Control/ScaleLine.html
+END
+Measure.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12046/trunk/openlayers/tests/Control/Measure.html
+END
+Attribution.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/11162/trunk/openlayers/tests/Control/Attribution.html
+END
+PinchZoom.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/11544/trunk/openlayers/tests/Control/PinchZoom.html
+END
+EditingToolbar.html
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/12346/trunk/openlayers/tests/Control/EditingToolbar.html
+END
+NavToolbar.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/11964/trunk/openlayers/tests/Control/NavToolbar.html
+END
+DrawFeature.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/12434/trunk/openlayers/tests/Control/DrawFeature.html
+END
+MouseToolbar.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/11162/trunk/openlayers/tests/Control/MouseToolbar.html
+END
+MousePosition.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/11162/trunk/openlayers/tests/Control/MousePosition.html
+END
+Snapping.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12255/trunk/openlayers/tests/Control/Snapping.html
+END
+NavigationHistory.html
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/11162/trunk/openlayers/tests/Control/NavigationHistory.html
+END
+SLDSelect.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/11720/trunk/openlayers/tests/Control/SLDSelect.html
+END
+KeyboardDefaults.html
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/11678/trunk/openlayers/tests/Control/KeyboardDefaults.html
+END
+Split.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/11381/trunk/openlayers/tests/Control/Split.html
+END

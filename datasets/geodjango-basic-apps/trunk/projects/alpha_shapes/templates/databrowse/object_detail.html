@@ -1,0 +1,163 @@
+{% extends "databrowse/base_site.html" %}
+
+{% block extrahead %}
+     <script src="http://openlayers.org/api/OpenLayers.js"></script>
+
+{% endblock %}
+
+{% block title %}{{ object.model.verbose_name|capfirst }}: {{ object }}{% endblock %}
+
+ 
+{% block content %}
+
+<div id="breadcrumbs"><a href="{{ root_url }}">Home</a> / <a href="{{ object.model.url }}">{{ object.model.verbose_name_plural|capfirst }}</a> / {{ object|escape }}</div>
+
+<h1>{{ object.model.verbose_name|capfirst }}: {{ object|escape }}</h1>
+
+<table class="objectinfo">
+{% for field in object.fields %}
+<tr class="{% cycle 'odd' 'even' %}">
+<th>{{ field.field.verbose_name|capfirst }}
+{% if field.field.srid %}
+
+<br />
+<br />
+<div id="input{{ field.field.name }}">
+<label for="formatType{{ field.field.name }}">Format</label>
+<select name="formatType{{ field.field.name }}" id="formatType{{ field.field.name }}" onchange='serialize()'>
+    <option value="geojson" selected="selected">GeoJSON</option>
+    <option value="kml">KML</option>
+    <option value="gml">GML</option>
+    <option value="wkt">Well-Known Text (WKT)</option>
+</select>
+<br />
+Projection: <select id="outproj{{ field.field.name }}" onchange='{{ field.field.name }}updateFormats()'>
+<option value="EPSG:4326" selected="selected">EPSG:4326</option>
+<option value="EPSG:900913">Spherical Mercator</option>
+</select>
+</div>
+<br />
+<br />
+<div id="info{{ field.field.name }}">
+Select Feature to see geometry:<br />
+<textarea id="output{{ field.field.name }}" style="width: 100%; height: 300px"></textarea>
+</div>
+
+{% endif %}</th>
+<td>
+{% if field.urls %}
+{% for value, url in field.urls %}
+
+{% if field.field.srid %}
+<script type="text/javascript">
+//<![CDATA[
+       var map{{ field.field.name }}, layer, wkt, options, {{ field.field.name }}formats;
+       
+       var src = new OpenLayers.Projection('EPSG:4326'); 
+       var dest = new OpenLayers.Projection('EPSG:900913');
+       
+       function {{ field.field.name }}updateFormats() { 
+            {{ field.field.name }}formats = {
+              'in': {
+                wkt: new OpenLayers.Format.WKT(),
+                geojson: new OpenLayers.Format.GeoJSON(),
+                georss: new OpenLayers.Format.GeoRSS(),
+                gml: new OpenLayers.Format.GML(),
+                kml: new OpenLayers.Format.KML()
+              }, 
+              'out': {
+                wkt: new OpenLayers.Format.WKT(),
+                geojson: new OpenLayers.Format.GeoJSON(),
+                georss: new OpenLayers.Format.GeoRSS(),
+                gml: new OpenLayers.Format.GML(),
+                kml: new OpenLayers.Format.KML()
+              } 
+            };
+        serialize()
+        }
+       
+        function serialize() {
+            if ({{ field.field.name }}vectors.selectedFeatures.length == 1) {
+            var {{ field.field.name }}feature = {{ field.field.name }}vectors.selectedFeatures[0].clone()
+            var type = document.getElementById("formatType{{ field.field.name }}").value;
+            var proj = document.getElementById("outproj{{ field.field.name }}").value;
+            if (proj == "EPSG:4326") {
+               {{ field.field.name }}feature.geometry.transform(dest,src);
+               }
+            var str = {{ field.field.name }}formats['out'][type].write({{ field.field.name }}feature);
+            str = str.replace(/,/g, ', ');
+            document.getElementById('output{{ field.field.name }}').value = str;
+            } else {document.getElementById('output{{ field.field.name }}').value = ''}
+        }
+         
+       function init(){
+       var options = {
+           'projection' : new OpenLayers.Projection("EPSG:900913"),
+           'numZoomLevels' : 20,
+           'displayProjection' : new OpenLayers.Projection("EPSG:4326"),
+           'units' : "m",
+           'maxResolution' : 156543.0339,
+           'maxExtent' : new OpenLayers.Bounds(-20037508,-20037508,20037508,20037508)
+       }
+       
+       var map{{ field.field.name }} = new OpenLayers.Map( 'map{{ field.field.name }}', options );
+       layer = new OpenLayers.Layer.OSM("OpenStreetMap (Mapnik)");
+       map{{ field.field.name }}.addLayer(layer);
+       map{{ field.field.name }}.addControl(new OpenLayers.Control.MousePosition());
+       {{ field.field.name }}vectors = new OpenLayers.Layer.Vector("Vector Layer");
+       wkt = new OpenLayers.Format.WKT();
+       var {{ field.field.name }}features = wkt.read('{{ value }}');
+       {{ field.field.name }}features.geometry.transform(src, dest);
+       {{ field.field.name }}vectors.addFeatures([{{ field.field.name }}features]);
+       map{{ field.field.name }}.addLayer({{ field.field.name }}vectors);
+       map{{ field.field.name }}.zoomToExtent({{ field.field.name }}features.geometry.getBounds());
+       if (map{{ field.field.name }}.getZoom() > 13) {
+        map{{ field.field.name }}.zoomTo(13);
+       }
+       map{{ field.field.name }}.getControlsByClass('OpenLayers.Control.Navigation')[0].disableZoomWheel();
+       var select_options = {
+            hover: false,
+            onSelect: serialize,
+            onUnselect: serialize,
+       };
+       var {{ field.field.name }}select = new OpenLayers.Control.SelectFeature({{ field.field.name }}vectors, select_options);
+       map{{ field.field.name }}.addControl({{ field.field.name }}select);
+       {{ field.field.name }}select.activate();
+       {{ field.field.name }}updateFormats();
+       }
+//]]>
+</script>
+<div id="map{{ field.field.name }}" style="width: 800px; height: 400px; padding: 10px"></div>
+
+<script type="text/javascript">init();</script>
+{% else %}
+
+{% if url %}<a href="{{ url }}">{% endif %}{{ value|escape }} 
+{% if url %}</a>{% endif %}
+
+{% endif %}
+
+{% if not forloop.last %}, {% endif %}
+{% endfor %}
+{% else %}None{% endif %}
+</td>
+</tr>
+{% endfor %}
+</table>
+
+{% for related_object in object.related_objects %}
+  <div class="related">
+  <h2>Appears in "{{ related_object.related_field }}" in the following {{ related_object.model.verbose_name_plural }}:</h2>
+  {% if related_object.object_list %}
+  <ul class="objectlist">
+    {% for object in related_object.object_list %}
+    <li class="{% cycle 'odd' 'even' %}"><a href="{{ object.url }}">{{ object|escape }}</a></li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="quiet">(None)</p>
+  {% endif %}
+  </div>
+{% endfor %}
+
+{% endblock %}

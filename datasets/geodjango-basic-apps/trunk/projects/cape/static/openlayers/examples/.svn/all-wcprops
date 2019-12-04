@@ -1,0 +1,1571 @@
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/!svn/ver/12434/trunk/openlayers/examples
+END
+drag-feature.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12082/trunk/openlayers/examples/drag-feature.html
+END
+ve.html
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/!svn/ver/12082/trunk/openlayers/examples/ve.html
+END
+resize-features.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12082/trunk/openlayers/examples/resize-features.html
+END
+cross-origin.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12082/trunk/openlayers/examples/cross-origin.html
+END
+wrapDateLine.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12213/trunk/openlayers/examples/wrapDateLine.html
+END
+editingtoolbar-outside.html
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/12082/trunk/openlayers/examples/editingtoolbar-outside.html
+END
+strategy-cluster.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/12434/trunk/openlayers/examples/strategy-cluster.html
+END
+setextent.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12082/trunk/openlayers/examples/setextent.html
+END
+style.css
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/!svn/ver/11287/trunk/openlayers/examples/style.css
+END
+single-tile.js
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/10883/trunk/openlayers/examples/single-tile.js
+END
+arcgiscache_direct.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/12032/trunk/openlayers/examples/arcgiscache_direct.html
+END
+draw-feature.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12082/trunk/openlayers/examples/draw-feature.html
+END
+behavior-fixed-http-gml.html
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/12082/trunk/openlayers/examples/behavior-fixed-http-gml.html
+END
+kinetic.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/12082/trunk/openlayers/examples/kinetic.html
+END
+styles-unique.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12434/trunk/openlayers/examples/styles-unique.html
+END
+editing-methods.js
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12434/trunk/openlayers/examples/editing-methods.js
+END
+xhtml.html
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/12082/trunk/openlayers/examples/xhtml.html
+END
+select-feature-multilayer.html
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/12364/trunk/openlayers/examples/select-feature-multilayer.html
+END
+stylemap.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/12082/trunk/openlayers/examples/stylemap.html
+END
+measure.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/12336/trunk/openlayers/examples/measure.html
+END
+style.mobile-jq.css
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/11896/trunk/openlayers/examples/style.mobile-jq.css
+END
+wms-long-url.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12082/trunk/openlayers/examples/wms-long-url.html
+END
+overviewmap.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12434/trunk/openlayers/examples/overviewmap.html
+END
+simplify-linestring.html
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/12082/trunk/openlayers/examples/simplify-linestring.html
+END
+wfs-reprojection.js
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/10015/trunk/openlayers/examples/wfs-reprojection.js
+END
+geolocation.js
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12117/trunk/openlayers/examples/geolocation.js
+END
+mobile.js
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/!svn/ver/12031/trunk/openlayers/examples/mobile.js
+END
+boxes.html
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/12082/trunk/openlayers/examples/boxes.html
+END
+tilecache.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12434/trunk/openlayers/examples/tilecache.html
+END
+mobile-base.js
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12031/trunk/openlayers/examples/mobile-base.js
+END
+mapserver_untiled.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/12082/trunk/openlayers/examples/mapserver_untiled.html
+END
+getfeature-wfs.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12082/trunk/openlayers/examples/getfeature-wfs.html
+END
+gml-layer.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12082/trunk/openlayers/examples/gml-layer.html
+END
+wmst.html
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/!svn/ver/12082/trunk/openlayers/examples/wmst.html
+END
+browser.js
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/11539/trunk/openlayers/examples/browser.js
+END
+transform-feature.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/12082/trunk/openlayers/examples/transform-feature.html
+END
+geojson.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/12082/trunk/openlayers/examples/geojson.html
+END
+cql-format.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12082/trunk/openlayers/examples/cql-format.html
+END
+styles-context.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12082/trunk/openlayers/examples/styles-context.html
+END
+select-feature.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12082/trunk/openlayers/examples/select-feature.html
+END
+mm.html
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/!svn/ver/12082/trunk/openlayers/examples/mm.html
+END
+outOfRangeMarkers.txt
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/3097/trunk/openlayers/examples/outOfRangeMarkers.txt
+END
+georss-flickr.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12082/trunk/openlayers/examples/georss-flickr.html
+END
+canvas.html
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/12082/trunk/openlayers/examples/canvas.html
+END
+cql-format.js
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/11065/trunk/openlayers/examples/cql-format.js
+END
+sundials.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/12184/trunk/openlayers/examples/sundials.html
+END
+game-accel-ball.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12434/trunk/openlayers/examples/game-accel-ball.html
+END
+symbolizers-fill-stroke-graphic.html
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/!svn/ver/12082/trunk/openlayers/examples/symbolizers-fill-stroke-graphic.html
+END
+xyz-offset.js
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/12389/trunk/openlayers/examples/xyz-offset.js
+END
+web-mercator.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12082/trunk/openlayers/examples/web-mercator.html
+END
+mobile-jq.js
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/12434/trunk/openlayers/examples/mobile-jq.js
+END
+donut.html
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/12082/trunk/openlayers/examples/donut.html
+END
+wmts.html
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/!svn/ver/12082/trunk/openlayers/examples/wmts.html
+END
+tile-origin.js
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/11033/trunk/openlayers/examples/tile-origin.js
+END
+xyz-esri.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/12434/trunk/openlayers/examples/xyz-esri.html
+END
+textfile.txt
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/2103/trunk/openlayers/examples/textfile.txt
+END
+markerResize.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12082/trunk/openlayers/examples/markerResize.html
+END
+mobile-drawing.js
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12371/trunk/openlayers/examples/mobile-drawing.js
+END
+custom-style.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12082/trunk/openlayers/examples/custom-style.html
+END
+canvas-hit-detection.html
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/12032/trunk/openlayers/examples/canvas-hit-detection.html
+END
+regular-polygons.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/12082/trunk/openlayers/examples/regular-polygons.html
+END
+navtoolbar-alwaysZoom.html
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/12082/trunk/openlayers/examples/navtoolbar-alwaysZoom.html
+END
+vector-formats.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12370/trunk/openlayers/examples/vector-formats.html
+END
+google.html
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/12082/trunk/openlayers/examples/google.html
+END
+wms-v13.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/12082/trunk/openlayers/examples/wms-v13.html
+END
+clientzoom.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12434/trunk/openlayers/examples/clientzoom.html
+END
+mousewheel-interval.html
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/12082/trunk/openlayers/examples/mousewheel-interval.html
+END
+openls.html
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/12082/trunk/openlayers/examples/openls.html
+END
+late-render.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12082/trunk/openlayers/examples/late-render.html
+END
+google-v3.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12082/trunk/openlayers/examples/google-v3.html
+END
+example.js
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/10754/trunk/openlayers/examples/example.js
+END
+fullScreen.js
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/11685/trunk/openlayers/examples/fullScreen.js
+END
+all-overlays.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12082/trunk/openlayers/examples/all-overlays.html
+END
+gutter.html
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/12434/trunk/openlayers/examples/gutter.html
+END
+xyz-offset.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12082/trunk/openlayers/examples/xyz-offset.html
+END
+animator.js
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/12434/trunk/openlayers/examples/animator.js
+END
+intersects.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12082/trunk/openlayers/examples/intersects.html
+END
+click.html
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/12082/trunk/openlayers/examples/click.html
+END
+sld.js
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/!svn/ver/12206/trunk/openlayers/examples/sld.js
+END
+select-feature-openpopup.html
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/12082/trunk/openlayers/examples/select-feature-openpopup.html
+END
+accessible.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12082/trunk/openlayers/examples/accessible.html
+END
+wmts-getfeatureinfo.js
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/10656/trunk/openlayers/examples/wmts-getfeatureinfo.js
+END
+mobile.html
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/12082/trunk/openlayers/examples/mobile.html
+END
+kml-pointtrack.js
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/11722/trunk/openlayers/examples/kml-pointtrack.js
+END
+getfeatureinfo-popup.html
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/12082/trunk/openlayers/examples/getfeatureinfo-popup.html
+END
+wfs-states.js
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/11616/trunk/openlayers/examples/wfs-states.js
+END
+wms-long-url.js
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12241/trunk/openlayers/examples/wms-long-url.js
+END
+mobile-sencha.js
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/11483/trunk/openlayers/examples/mobile-sencha.js
+END
+arcgis93rest.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12082/trunk/openlayers/examples/arcgis93rest.html
+END
+canvas-inspector.js
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/11849/trunk/openlayers/examples/canvas-inspector.js
+END
+popupMatrix.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12434/trunk/openlayers/examples/popupMatrix.html
+END
+custom-control.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12082/trunk/openlayers/examples/custom-control.html
+END
+kml-layer.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12082/trunk/openlayers/examples/kml-layer.html
+END
+outOfRangeMarkers.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/12082/trunk/openlayers/examples/outOfRangeMarkers.html
+END
+panel.html
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/12082/trunk/openlayers/examples/panel.html
+END
+label-scale.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12167/trunk/openlayers/examples/label-scale.html
+END
+wfs-protocol-transactions.html
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/12082/trunk/openlayers/examples/wfs-protocol-transactions.html
+END
+kml-track.kml
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/10633/trunk/openlayers/examples/kml-track.kml
+END
+events.html
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/12082/trunk/openlayers/examples/events.html
+END
+kml-layer.js
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/10875/trunk/openlayers/examples/kml-layer.js
+END
+navtoolbar.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12082/trunk/openlayers/examples/navtoolbar.html
+END
+wms-untiled.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12082/trunk/openlayers/examples/wms-untiled.html
+END
+ordering.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/12434/trunk/openlayers/examples/ordering.html
+END
+navigation-control.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/12082/trunk/openlayers/examples/navigation-control.html
+END
+mobile-jq.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12082/trunk/openlayers/examples/mobile-jq.html
+END
+bing-tiles-restrictedzoom.js
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/12107/trunk/openlayers/examples/bing-tiles-restrictedzoom.js
+END
+multiserver.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12082/trunk/openlayers/examples/multiserver.html
+END
+canvas.js
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/!svn/ver/11555/trunk/openlayers/examples/canvas.js
+END
+getfeatureinfo-control.html
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/12434/trunk/openlayers/examples/getfeatureinfo-control.html
+END
+popups.html
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/12434/trunk/openlayers/examples/popups.html
+END
+wmts-capabilities.js
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12434/trunk/openlayers/examples/wmts-capabilities.js
+END
+mouse-position.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12082/trunk/openlayers/examples/mouse-position.html
+END
+draw-undo-redo.js
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12104/trunk/openlayers/examples/draw-undo-redo.js
+END
+zoomLevels.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12082/trunk/openlayers/examples/zoomLevels.html
+END
+wfs-reprojection.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/12082/trunk/openlayers/examples/wfs-reprojection.html
+END
+highlight-feature.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/12082/trunk/openlayers/examples/highlight-feature.html
+END
+georss.html
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/12082/trunk/openlayers/examples/georss.html
+END
+tms.html
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/!svn/ver/12082/trunk/openlayers/examples/tms.html
+END
+marker-shadow.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12082/trunk/openlayers/examples/marker-shadow.html
+END
+attribution.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12082/trunk/openlayers/examples/attribution.html
+END
+mobile-sencha.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12082/trunk/openlayers/examples/mobile-sencha.html
+END
+modify-feature.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12152/trunk/openlayers/examples/modify-feature.html
+END
+graphic-name.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12082/trunk/openlayers/examples/graphic-name.html
+END
+clientzoom.js
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/12434/trunk/openlayers/examples/clientzoom.js
+END
+animated_panning.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/12082/trunk/openlayers/examples/animated_panning.html
+END
+lite.html
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/!svn/ver/12082/trunk/openlayers/examples/lite.html
+END
+style-rules.js
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/10708/trunk/openlayers/examples/style-rules.js
+END
+protocol-gears.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12434/trunk/openlayers/examples/protocol-gears.html
+END
+markers.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/12082/trunk/openlayers/examples/markers.html
+END
+example-list.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12434/trunk/openlayers/examples/example-list.html
+END
+arcgiscache_jsonp.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/12260/trunk/openlayers/examples/arcgiscache_jsonp.html
+END
+editingtoolbar.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12082/trunk/openlayers/examples/editingtoolbar.html
+END
+Jugl.js
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/!svn/ver/10824/trunk/openlayers/examples/Jugl.js
+END
+label-scale.js
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12167/trunk/openlayers/examples/label-scale.js
+END
+wfs-protocol-transactions.js
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/11969/trunk/openlayers/examples/wfs-protocol-transactions.js
+END
+restricted-extent.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/12434/trunk/openlayers/examples/restricted-extent.html
+END
+yahoo.html
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/12082/trunk/openlayers/examples/yahoo.html
+END
+wfs-filter.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12082/trunk/openlayers/examples/wfs-filter.html
+END
+snap-grid.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12099/trunk/openlayers/examples/snap-grid.html
+END
+anchor-permalink.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/12082/trunk/openlayers/examples/anchor-permalink.html
+END
+bing-tiles.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12082/trunk/openlayers/examples/bing-tiles.html
+END
+kml-pointtrack.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12082/trunk/openlayers/examples/kml-pointtrack.html
+END
+wmts-getfeatureinfo.html
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/12082/trunk/openlayers/examples/wmts-getfeatureinfo.html
+END
+mobile-drawing.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12082/trunk/openlayers/examples/mobile-drawing.html
+END
+wmts.js
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/!svn/ver/10388/trunk/openlayers/examples/wmts.js
+END
+multimap-mercator.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/12082/trunk/openlayers/examples/multimap-mercator.html
+END
+bing-tiles.js
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/12106/trunk/openlayers/examples/bing-tiles.js
+END
+urban.html
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/12082/trunk/openlayers/examples/urban.html
+END
+canvas-inspector.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/12032/trunk/openlayers/examples/canvas-inspector.html
+END
+osm-google.js
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/10474/trunk/openlayers/examples/osm-google.js
+END
+strategy-cluster-extended.js
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/!svn/ver/10811/trunk/openlayers/examples/strategy-cluster-extended.js
+END
+wfs-protocol.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12082/trunk/openlayers/examples/wfs-protocol.html
+END
+osm.html
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/!svn/ver/12434/trunk/openlayers/examples/osm.html
+END
+ve-novibrate.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12082/trunk/openlayers/examples/ve-novibrate.html
+END
+mobile-navigation.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/12082/trunk/openlayers/examples/mobile-navigation.html
+END
+mobile-layers.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12082/trunk/openlayers/examples/mobile-layers.html
+END
+strategy-paging.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12082/trunk/openlayers/examples/strategy-paging.html
+END
+google-v3.js
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/11047/trunk/openlayers/examples/google-v3.js
+END
+point-grid.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12099/trunk/openlayers/examples/point-grid.html
+END
+wfs-snap-split.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12082/trunk/openlayers/examples/wfs-snap-split.html
+END
+draw-undo-redo.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12103/trunk/openlayers/examples/draw-undo-redo.html
+END
+style.mobile.css
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12434/trunk/openlayers/examples/style.mobile.css
+END
+snap-grid.js
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/12434/trunk/openlayers/examples/snap-grid.js
+END
+zoomify.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/12082/trunk/openlayers/examples/zoomify.html
+END
+wfs-states.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12082/trunk/openlayers/examples/wfs-states.html
+END
+donut.js
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/!svn/ver/12434/trunk/openlayers/examples/donut.js
+END
+controls.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/12082/trunk/openlayers/examples/controls.html
+END
+google-reproject.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/12082/trunk/openlayers/examples/google-reproject.html
+END
+rotate-features.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12082/trunk/openlayers/examples/rotate-features.html
+END
+simplify-linestring.js
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/10969/trunk/openlayers/examples/simplify-linestring.js
+END
+canvas-hit-detection.js
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/11887/trunk/openlayers/examples/canvas-hit-detection.js
+END
+wmc.html
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/!svn/ver/12082/trunk/openlayers/examples/wmc.html
+END
+arcgiscache_ags.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12032/trunk/openlayers/examples/arcgiscache_ags.html
+END
+snap-split.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12082/trunk/openlayers/examples/snap-split.html
+END
+google-v3-alloverlays.html
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/12082/trunk/openlayers/examples/google-v3-alloverlays.html
+END
+georss.xml
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/!svn/ver/5362/trunk/openlayers/examples/georss.xml
+END
+graphic-name.js
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/10991/trunk/openlayers/examples/graphic-name.js
+END
+sos.html
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/!svn/ver/12082/trunk/openlayers/examples/sos.html
+END
+mvs.html
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/!svn/ver/12434/trunk/openlayers/examples/mvs.html
+END
+google-v3-alloverlays.js
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/10550/trunk/openlayers/examples/google-v3-alloverlays.js
+END
+wms.html
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/!svn/ver/12082/trunk/openlayers/examples/wms.html
+END
+markersTextLayer.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/12082/trunk/openlayers/examples/markersTextLayer.html
+END
+bing-tiles-restrictedzoom.html
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/12107/trunk/openlayers/examples/bing-tiles-restrictedzoom.html
+END
+worldwind.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12082/trunk/openlayers/examples/worldwind.html
+END
+strategy-cluster-threshold.html
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/12082/trunk/openlayers/examples/strategy-cluster-threshold.html
+END
+mobile-navigation.js
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12031/trunk/openlayers/examples/mobile-navigation.js
+END
+mobile-layers.js
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12434/trunk/openlayers/examples/mobile-layers.js
+END
+arcims.html
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/12082/trunk/openlayers/examples/arcims.html
+END
+navtoolbar-outsidemap.html
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/12082/trunk/openlayers/examples/navtoolbar-outsidemap.html
+END
+tile-origin.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12082/trunk/openlayers/examples/tile-origin.html
+END
+layer-opacity.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12082/trunk/openlayers/examples/layer-opacity.html
+END
+point-grid.js
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/12434/trunk/openlayers/examples/point-grid.js
+END
+debug.html
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/12082/trunk/openlayers/examples/debug.html
+END
+document-drag.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12082/trunk/openlayers/examples/document-drag.html
+END
+transition.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12082/trunk/openlayers/examples/transition.html
+END
+multitouch.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12372/trunk/openlayers/examples/multitouch.html
+END
+navigation-history.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/12082/trunk/openlayers/examples/navigation-history.html
+END
+hover-handler.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12082/trunk/openlayers/examples/hover-handler.html
+END
+KMLParser.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12434/trunk/openlayers/examples/KMLParser.html
+END
+click-handler.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12082/trunk/openlayers/examples/click-handler.html
+END
+geolocation.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12082/trunk/openlayers/examples/geolocation.html
+END
+georss-markers.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12082/trunk/openlayers/examples/georss-markers.html
+END
+osm-layer.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12434/trunk/openlayers/examples/osm-layer.html
+END
+vector-features-with-text.html
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/12082/trunk/openlayers/examples/vector-features-with-text.html
+END
+accelerometer.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12082/trunk/openlayers/examples/accelerometer.html
+END
+wfs-spatial-filter.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/12087/trunk/openlayers/examples/wfs-spatial-filter.html
+END
+vector-features.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12082/trunk/openlayers/examples/vector-features.html
+END
+strategy-cluster-extended.html
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/12082/trunk/openlayers/examples/strategy-cluster-extended.html
+END
+bing.html
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/!svn/ver/12434/trunk/openlayers/examples/bing.html
+END
+dynamic-text-layer.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/12082/trunk/openlayers/examples/dynamic-text-layer.html
+END
+WMSDescribeLayerParser.html
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/12434/trunk/openlayers/examples/WMSDescribeLayerParser.html
+END
+browser.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/12082/trunk/openlayers/examples/browser.html
+END
+all-overlays-google.html
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/12082/trunk/openlayers/examples/all-overlays-google.html
+END
+split-feature.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12082/trunk/openlayers/examples/split-feature.html
+END
+filter.html
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/12082/trunk/openlayers/examples/filter.html
+END
+wfs-spatial-filter.js
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/12088/trunk/openlayers/examples/wfs-spatial-filter.js
+END
+style-rules.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12082/trunk/openlayers/examples/style-rules.html
+END
+teleportation.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12082/trunk/openlayers/examples/teleportation.html
+END
+kamap.html
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/12082/trunk/openlayers/examples/kamap.html
+END
+point-track-markers.html
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/12082/trunk/openlayers/examples/point-track-markers.html
+END
+fullScreen.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12082/trunk/openlayers/examples/fullScreen.html
+END
+mapserver.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12082/trunk/openlayers/examples/mapserver.html
+END
+single-tile.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12082/trunk/openlayers/examples/single-tile.html
+END
+graticule.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12082/trunk/openlayers/examples/graticule.html
+END
+proxy.cgi
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/!svn/ver/11781/trunk/openlayers/examples/proxy.cgi
+END
+styles-rotation.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12082/trunk/openlayers/examples/styles-rotation.html
+END
+wmts-capabilities.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/12082/trunk/openlayers/examples/wmts-capabilities.html
+END
+layerLoadMonitoring.html
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/12434/trunk/openlayers/examples/layerLoadMonitoring.html
+END
+sld.html
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/!svn/ver/12173/trunk/openlayers/examples/sld.html
+END
+SLDSelect.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12148/trunk/openlayers/examples/SLDSelect.html
+END
+editing-methods.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12103/trunk/openlayers/examples/editing-methods.html
+END
+spherical-mercator.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/12434/trunk/openlayers/examples/spherical-mercator.html
+END
+kml-track.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12082/trunk/openlayers/examples/kml-track.html
+END
+cross-origin.js
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/11691/trunk/openlayers/examples/cross-origin.js
+END
+doubleSetCenter.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12082/trunk/openlayers/examples/doubleSetCenter.html
+END
+wfs-filter.js
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/10605/trunk/openlayers/examples/wfs-filter.js
+END
+strategy-bbox.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12082/trunk/openlayers/examples/strategy-bbox.html
+END
+mapguide.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/12434/trunk/openlayers/examples/mapguide.html
+END
+kml-track.js
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/11893/trunk/openlayers/examples/kml-track.js
+END
+kinetic.js
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/11261/trunk/openlayers/examples/kinetic.js
+END
+web-mercator.js
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/10708/trunk/openlayers/examples/web-mercator.js
+END
+anchor-permalink.js
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/11170/trunk/openlayers/examples/anchor-permalink.js
+END
+kamap.txt
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/!svn/ver/1424/trunk/openlayers/examples/kamap.txt
+END
+sundials-spherical-mercator.html
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/12184/trunk/openlayers/examples/sundials-spherical-mercator.html
+END
+yelp-georss.xml
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/5362/trunk/openlayers/examples/yelp-georss.xml
+END
+osm-google.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12082/trunk/openlayers/examples/osm-google.html
+END
+buffer.html
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/12434/trunk/openlayers/examples/buffer.html
+END
+arcims-thematic.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12082/trunk/openlayers/examples/arcims-thematic.html
+END
+sld-parser.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12082/trunk/openlayers/examples/sld-parser.html
+END
+snapping.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/12434/trunk/openlayers/examples/snapping.html
+END
+pan-zoom-panels.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12082/trunk/openlayers/examples/pan-zoom-panels.html
+END
+boxes-vector.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12082/trunk/openlayers/examples/boxes-vector.html
+END
+filter-strategy.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12082/trunk/openlayers/examples/filter-strategy.html
+END
+layerswitcher.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12082/trunk/openlayers/examples/layerswitcher.html
+END
+projected-map.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12082/trunk/openlayers/examples/projected-map.html
+END
+example.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/12082/trunk/openlayers/examples/example.html
+END
+all-overlays-google.js
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/10480/trunk/openlayers/examples/all-overlays-google.js
+END
+image-layer.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12082/trunk/openlayers/examples/image-layer.html
+END
+filter-strategy.js
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/12434/trunk/openlayers/examples/filter-strategy.js
+END
+xml.html
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/!svn/ver/12206/trunk/openlayers/examples/xml.html
+END
+fractional-zoom.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12082/trunk/openlayers/examples/fractional-zoom.html
+END

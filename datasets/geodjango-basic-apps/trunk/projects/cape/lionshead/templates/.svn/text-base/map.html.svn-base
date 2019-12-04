@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <script src="/static/openlayers/lib/OpenLayers.js"></script>
+    <script type="text/javascript">
+        var map, base_layer, kml;
+        var ms_url = "http://localhost/cgi-bin/mapserv?map=/home/user/wms/cape.map&"
+        function init(){
+            map = new OpenLayers.Map('map');
+            base_layer = new OpenLayers.Layer.WMS( "OpenLayers WMS",
+               "http://labs.metacarta.com/wms/vmap0", {layers: 'basic'} );
+            var countries = new OpenLayers.Layer.WMS("Countries",
+               ms_url, {layers : 'countries'} );
+            var wards = new OpenLayers.Layer.WMS("Wards",
+               ms_url, {layers : 'wards'} );
+
+            kml = new OpenLayers.Layer.GML("KML", "/kml", 
+               { format: OpenLayers.Format.KML });
+            map.addLayers([base_layer, countries, wards, kml]);
+            
+            map.addControl(new OpenLayers.Control.LayerSwitcher());
+            map.setCenter(new OpenLayers.LonLat(18.45,-34),7); 
+            }
+    </script>
+  </head>
+  <body onload="init()">
+    Hi.  There should be a total of {{location_count}} Locations.<br>
+    <div id="map"></div>
+  </body>
+</html>

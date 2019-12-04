@@ -1,0 +1,203 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/!svn/ver/12434/trunk/openlayers/tests/Format
+END
+CSWGetRecords.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/11162/trunk/openlayers/tests/Format/CSWGetRecords.html
+END
+WFSDescribeFeatureType.html
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/11162/trunk/openlayers/tests/Format/WFSDescribeFeatureType.html
+END
+CQL.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/11162/trunk/openlayers/tests/Format/CQL.html
+END
+GML.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/11162/trunk/openlayers/tests/Format/GML.html
+END
+SOSGetObservation.html
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/11162/trunk/openlayers/tests/Format/SOSGetObservation.html
+END
+WMSCapabilities.html
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/11162/trunk/openlayers/tests/Format/WMSCapabilities.html
+END
+SLD.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/11162/trunk/openlayers/tests/Format/SLD.html
+END
+OGCExceptionReport.html
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/12074/trunk/openlayers/tests/Format/OGCExceptionReport.html
+END
+KML.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/12218/trunk/openlayers/tests/Format/KML.html
+END
+WFST.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/11162/trunk/openlayers/tests/Format/WFST.html
+END
+Text.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/11169/trunk/openlayers/tests/Format/Text.html
+END
+Filter.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/11162/trunk/openlayers/tests/Format/Filter.html
+END
+ArcXML.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/11162/trunk/openlayers/tests/Format/ArcXML.html
+END
+WPSExecute.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/12434/trunk/openlayers/tests/Format/WPSExecute.html
+END
+WMSGetFeatureInfo.html
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/11741/trunk/openlayers/tests/Format/WMSGetFeatureInfo.html
+END
+GPX.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/12370/trunk/openlayers/tests/Format/GPX.html
+END
+GeoRSS.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12049/trunk/openlayers/tests/Format/GeoRSS.html
+END
+WMTSCapabilities.html
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/11162/trunk/openlayers/tests/Format/WMTSCapabilities.html
+END
+WKT.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/12160/trunk/openlayers/tests/Format/WKT.html
+END
+JSON.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/11162/trunk/openlayers/tests/Format/JSON.html
+END
+SOSGetFeatureOfInterest.html
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/11162/trunk/openlayers/tests/Format/SOSGetFeatureOfInterest.html
+END
+CSWGetDomain.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/11162/trunk/openlayers/tests/Format/CSWGetDomain.html
+END
+WMC.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/11871/trunk/openlayers/tests/Format/WMC.html
+END
+OSM.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/11647/trunk/openlayers/tests/Format/OSM.html
+END
+WFS.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/11162/trunk/openlayers/tests/Format/WFS.html
+END
+XML.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/12108/trunk/openlayers/tests/Format/XML.html
+END
+Atom.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/11162/trunk/openlayers/tests/Format/Atom.html
+END
+QueryStringFilter.html
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/11758/trunk/openlayers/tests/Format/QueryStringFilter.html
+END
+WMSDescribeLayer.html
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/11162/trunk/openlayers/tests/Format/WMSDescribeLayer.html
+END
+GeoJSON.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/!svn/ver/12109/trunk/openlayers/tests/Format/GeoJSON.html
+END
+WCSGetCoverage.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/12125/trunk/openlayers/tests/Format/WCSGetCoverage.html
+END
+WFSCapabilities.html
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/11162/trunk/openlayers/tests/Format/WFSCapabilities.html
+END
+WPSDescribeProcess.html
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/12124/trunk/openlayers/tests/Format/WPSDescribeProcess.html
+END

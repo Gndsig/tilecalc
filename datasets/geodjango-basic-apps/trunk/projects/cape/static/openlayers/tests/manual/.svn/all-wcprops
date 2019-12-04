@@ -1,0 +1,215 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/!svn/ver/12434/trunk/openlayers/tests/manual
+END
+overviewmap-projection.html
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/!svn/ver/7864/trunk/openlayers/tests/manual/overviewmap-projection.html
+END
+ve-opacity.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/9758/trunk/openlayers/tests/manual/ve-opacity.html
+END
+renderedDimensions.html
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/8906/trunk/openlayers/tests/manual/renderedDimensions.html
+END
+geodesic.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/10110/trunk/openlayers/tests/manual/geodesic.html
+END
+tween.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/6673/trunk/openlayers/tests/manual/tween.html
+END
+ajax.html
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/7335/trunk/openlayers/tests/manual/ajax.html
+END
+pan-redraw-svg.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/7930/trunk/openlayers/tests/manual/pan-redraw-svg.html
+END
+box-strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/11749/trunk/openlayers/tests/manual/box-strict.html
+END
+clip-features-svg.html
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/9771/trunk/openlayers/tests/manual/clip-features-svg.html
+END
+google-v3-resize.html
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/10957/trunk/openlayers/tests/manual/google-v3-resize.html
+END
+big-georss.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/7871/trunk/openlayers/tests/manual/big-georss.html
+END
+google-panning.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/9771/trunk/openlayers/tests/manual/google-panning.html
+END
+arkansas.rss
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/7871/trunk/openlayers/tests/manual/arkansas.rss
+END
+feature-handler.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/6131/trunk/openlayers/tests/manual/feature-handler.html
+END
+select-feature.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/7159/trunk/openlayers/tests/manual/select-feature.html
+END
+popup-keepInMap.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/9092/trunk/openlayers/tests/manual/popup-keepInMap.html
+END
+vector-features-performance.html
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/!svn/ver/11726/trunk/openlayers/tests/manual/vector-features-performance.html
+END
+page-position.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/10871/trunk/openlayers/tests/manual/page-position.html
+END
+svg2-coordinaterange.html
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/12163/trunk/openlayers/tests/manual/svg2-coordinaterange.html
+END
+dateline-smallextent.html
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/!svn/ver/12434/trunk/openlayers/tests/manual/dateline-smallextent.html
+END
+google-tilt.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/12369/trunk/openlayers/tests/manual/google-tilt.html
+END
+draw-feature.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/6131/trunk/openlayers/tests/manual/draw-feature.html
+END
+tiles-loading.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/!svn/ver/9758/trunk/openlayers/tests/manual/tiles-loading.html
+END
+google-fullscreen-overlay.html
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/12367/trunk/openlayers/tests/manual/google-fullscreen-overlay.html
+END
+rendered-dimensions.html
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/9384/trunk/openlayers/tests/manual/rendered-dimensions.html
+END
+ajax.txt
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/!svn/ver/5535/trunk/openlayers/tests/manual/ajax.txt
+END
+reflow.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/7578/trunk/openlayers/tests/manual/reflow.html
+END
+alloverlays-mixed.html
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/!svn/ver/12105/trunk/openlayers/tests/manual/alloverlays-mixed.html
+END
+multiple-google-layers.html
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/!svn/ver/10020/trunk/openlayers/tests/manual/multiple-google-layers.html
+END
+dateline-sketch.html
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/12434/trunk/openlayers/tests/manual/dateline-sketch.html
+END
+geojson-geomcoll-reprojection.html
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/!svn/ver/9181/trunk/openlayers/tests/manual/geojson-geomcoll-reprojection.html
+END
+box-quirks.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/11749/trunk/openlayers/tests/manual/box-quirks.html
+END
+arcims-2117.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/9474/trunk/openlayers/tests/manual/arcims-2117.html
+END
+google-resize.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/!svn/ver/10037/trunk/openlayers/tests/manual/google-resize.html
+END
+vector-layer-zindex.html
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/!svn/ver/7879/trunk/openlayers/tests/manual/vector-layer-zindex.html
+END

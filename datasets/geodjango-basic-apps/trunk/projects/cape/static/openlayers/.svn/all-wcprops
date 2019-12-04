@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/!svn/ver/12434/trunk/openlayers
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/!svn/ver/10995/trunk/openlayers/readme.txt
+END
+repository-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/5380/trunk/openlayers/repository-license.txt
+END
+release-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/!svn/ver/10815/trunk/openlayers/release-license.txt
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/!svn/ver/11971/trunk/openlayers/license.txt
+END

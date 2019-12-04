@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/!svn/ver/12346/trunk/openlayers/tests/Handler
+END
+Keyboard.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/11162/trunk/openlayers/tests/Handler/Keyboard.html
+END
+Pinch.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/11389/trunk/openlayers/tests/Handler/Pinch.html
+END
+Hover.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/11162/trunk/openlayers/tests/Handler/Hover.html
+END
+Click.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/11807/trunk/openlayers/tests/Handler/Click.html
+END
+Polygon.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12346/trunk/openlayers/tests/Handler/Polygon.html
+END
+Box.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/!svn/ver/12051/trunk/openlayers/tests/Handler/Box.html
+END
+Point.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/!svn/ver/12046/trunk/openlayers/tests/Handler/Point.html
+END
+RegularPolygon.html
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/12346/trunk/openlayers/tests/Handler/RegularPolygon.html
+END
+Feature.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/12146/trunk/openlayers/tests/Handler/Feature.html
+END
+Path.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/12346/trunk/openlayers/tests/Handler/Path.html
+END
+Drag.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/!svn/ver/11861/trunk/openlayers/tests/Handler/Drag.html
+END
+MouseWheel.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/11162/trunk/openlayers/tests/Handler/MouseWheel.html
+END

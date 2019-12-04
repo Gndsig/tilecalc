@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/!svn/ver/11162/trunk/openlayers/tests/Symbolizer
+END
+Raster.html
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/!svn/ver/11162/trunk/openlayers/tests/Symbolizer/Raster.html
+END
+Text.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/11162/trunk/openlayers/tests/Symbolizer/Text.html
+END
+Line.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/!svn/ver/11162/trunk/openlayers/tests/Symbolizer/Line.html
+END
+Polygon.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/!svn/ver/11162/trunk/openlayers/tests/Symbolizer/Polygon.html
+END
+Point.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/!svn/ver/11162/trunk/openlayers/tests/Symbolizer/Point.html
+END

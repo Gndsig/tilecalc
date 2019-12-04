@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <script src="http://openlayers.org/api/OpenLayers.js"></script>
+    <style type="text/css"> #map { width:400px; height: 400px; } </style>
+    <script type="text/javascript">
+        var map, base_layer, kml;
+        var ms_url = "http://localhost/cgi-bin/mapserv?map=/home/user/wms/cape.map&"
+        function init(){
+            map = new OpenLayers.Map('map');
+            base_layer = new OpenLayers.Layer.WMS( "OpenLayers WMS",
+               "http://labs.metacarta.com/wms/vmap0", {layers: 'basic'} );
+            var countries = new OpenLayers.Layer.WMS("Countries",
+               ms_url, {layers : 'countries'} );
+            var wards = new OpenLayers.Layer.WMS("Wards",
+               ms_url, {layers : 'wards'} );
+
+            var format = new OpenLayers.Format.GeoJSON()
+            ward = format.read({{ ward.geometry.geojson|safe}})[0]; 
+            // We mark it 'safe' so that Django doesn't escape the quotes.
+            
+            ward.attributes = { 'name': "{{ward.name}}", 'type': 'ward'}; 
+            vectors = new OpenLayers.Layer.Vector("Data");
+            vectors.addFeatures(ward); 
+            for (var i = 0; i < points.length; i++) {
+                point = format.read(points[i])[0]; 
+                point.attributes = {'type':'point'}; 
+                vectors.addFeatures(point);
+            }
+            map.addLayers([base_layer, countries, wards, vectors]);
+            
+            map.addControl(new OpenLayers.Control.LayerSwitcher());
+            map.zoomToExtent(ward.geometry.getBounds());            
+}
+    </script>
+  </head>
+  <body onload="init()">
+    Hi.  There should be a total of {{interesting_points.count}} Locations.<br>
+    <script> var points = []; </script>    
+    <ul>
+    {% for point in interesting_points %}
+        <li>{{ point.name }} -- {{point.interestingness}}</li>
+        <script>points.push({{point.geometry.geojson|safe}});</script>
+    {% endfor %}
+    </ul>
+    <div id="map"></div>
+  </body>
+</html>

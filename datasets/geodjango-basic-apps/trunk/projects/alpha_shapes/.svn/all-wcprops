@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/119/trunk/projects/alpha_shapes
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/__init__.py
+END
+settings.py
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/settings.py
+END
+load_flickr_data.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/load_flickr_data.py
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/readme.txt
+END
+urls.py
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/urls.py
+END
+manage.py
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/manage.py
+END

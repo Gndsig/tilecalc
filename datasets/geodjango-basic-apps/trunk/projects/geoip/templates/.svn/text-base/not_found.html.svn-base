@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html style="height:100%" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>GeoIP Sample Project</title>
+  </head>
+
+  <body style="height:100%">
+    <div id="map_canvas" style="height: 100%; width: 100%;">
+    <h1>Location unknown: Ip address was not properly geocoded.<h1>
+    <h2>Note: This view is designed for external Ip addresses. If you are running locally it will attempt to fetch your remote IP from http://checkip.dyndns.org/</h2>
+    <li>Try placing an ip in the url string to be matched by the 'whereis' view like: <a href="/whereis/a.remote.ip.address/">/whereis/a.remote.ip.address/</a></li>
+    </div>
+  </body>
+</html>

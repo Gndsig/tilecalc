@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html style="height:100%" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>GeoIP Sample Project</title>
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key={{ GOOGLE_MAPS_API_KEY }}"
+            type="text/javascript"></script>
+    <script type="text/javascript">
+    
+    function initialize() {
+      if (GBrowserIsCompatible()) {
+        var map = new GMap2(document.getElementById("map_canvas"));
+        map.setCenter(new GLatLng({{ remote_location.latitude }}, {{ remote_location.longitude }}), 13);
+        var latlng = new GLatLng({{ remote_location.latitude }}, {{ remote_location.longitude }});
+        map.addOverlay(new GMarker(latlng));
+       
+      }
+    }
+
+    </script>
+  </head>
+
+  <body style="height:100%" onload="initialize()" onunload="GUnload()">
+    <div id="map_canvas" style="height: 100%; width: 100%;"></div>
+  </body>
+</html>

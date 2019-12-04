@@ -1,0 +1,6 @@
+K 13
+svn:externals
+V 55
+openlayers http://svn.openlayers.org/trunk/openlayers/
+
+END

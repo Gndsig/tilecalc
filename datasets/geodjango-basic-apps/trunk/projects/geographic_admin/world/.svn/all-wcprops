@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/124/trunk/projects/geographic_admin/world
+END
+views.py
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/79/trunk/projects/geographic_admin/world/views.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/2/trunk/projects/geographic_admin/world/__init__.py
+END
+models.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/107/trunk/projects/geographic_admin/world/models.py
+END
+admin.py
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/124/trunk/projects/geographic_admin/world/admin.py
+END

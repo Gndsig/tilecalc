@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/templates/databrowse
+END
+base.html
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/templates/databrowse/base.html
+END
+base_site.html
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/templates/databrowse/base_site.html
+END
+object_detail.html
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/119/trunk/projects/alpha_shapes/templates/databrowse/object_detail.html
+END
