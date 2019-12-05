@@ -1,4 +1,4 @@
-
+from .link import LinkingPolylineImage
 
 
 __copyright__    = 'Copyright (C) 2019 rtafds'

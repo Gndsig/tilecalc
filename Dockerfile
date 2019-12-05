@@ -45,7 +45,11 @@ RUN chmod +x /usr/bin/tini
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 CMD [ "/bin/bash" ]
 
-# config git after make directory
-#git config --global user.name 
-#git config --global user.email 
+# git memo
+#git config --global user.name "aaa"
+#git config --global user.email aaa@aaa.com
 #git clone https://github.com/Gndsig/linking_polyline_image
+
+#echo "machine github.com" > ~/.netrc
+#echo "login aaa(username)" > ~/.netrc
+#echo "password pass" > ~/.netrc
