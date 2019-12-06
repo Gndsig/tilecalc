@@ -1,20 +1,17 @@
 #%%
 import numpy as np
 from shapely.geometry import LineString
+from shapely.geometry import Polygon
 import shapely.wkt
+import functools
+import glob
 
-#%%
-#import sys
-#sys.path.append('.../')
-#from ...linking.link import LinkingPolylineImage
 
 #%%
 line_sample1 = 'LINESTRING(139.07730102539062 36.00022956359412, 139.0814208984375 35.98022880246021)'
 ls1 = shapely.wkt.loads(line_sample1)
-ls2 = LineString([(139.07455444335938, 35.9913409624497), (139.07730102539062, 35.99356320664446),(139.07867431640625,35.99522880246021),(139.0814208984375,36.00022956359412)])
+ls2 = LineString([(139.07455444335938, 35.9913409624497), (139.07730102539062, 35.99356320664446),(139.07867431640625,35.99722880246021),(139.0814208984375,35.99822880246021)])
 
-#%%
-ls2
 
 #%%
 # sample
@@ -25,90 +22,119 @@ print(ls2.geom_type)
 print(ls2.distance)
 list(ls2.coords)
 
-#%%
 
 #%%
-#def xy_aligned(self, minimum=None):
-
+#def overlappingTileSegments
 self = LinkingPolylineImage(ls2)
-#form='bounds'
-form='general'
-#minimum=()
-minimum=(0.010, 0.010)
+#bounds = self.terminal_node_aligned()
+bounds = self.xy_aligned(form='rectangle')
+zoom=18
+filepath = './datasets'
+file_extention = '.webp'
+TILE_SIZE='self'
 
-# %%
-bounds = self.polyline.bounds
-x_min = bounds[0]
-y_min = bounds[1]
-x_max = bounds[2]
-y_max = bounds[3]
 
-center_point = ( (x_min+x_max)/2.0 , (y_min+y_max)/2.0 )
+if TILE_SIZE=='self' and hasattr(self, 'TILE_SIZE'):
+    TILE_SIZE = self.TILE_SIZE
+elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
+    raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
+        
+if not filepath[-1:]=='/':
+    filepath = filepath+'/'
+filepath = filepath + str(zoom) + '/'
 
-width = [ x_max-x_min, y_max-y_min]
+if len(bounds)==4:  # if bounds=(x_min,ymin,x_max,y_max)
+    bounds = [0, np.array([[bounds[0],bounds[1]],[bounds[2],bounds[1]],[bounds[2],bounds[3]],[bounds[0], bounds[3]]]) ]
 
-if not(minimum==() or minimum==[] or minimum==None):
-    # correct mimimum bounds
-    try:
-        if width[0] < minimum[0]:
-            width[0] = minimum[0]
-        if width[1] < minimum[1]:
-            width[1] = minimum[1]
-    except:
-        raise KeyError('minimum is (x_min, y_min) of tuple or list')
-    
-    x_min = center_point[0]-width[0]/2.0
-    y_min = center_point[1]-width[1]/2.0
-    x_max = center_point[0]+width[0]/2.0
-    y_max = center_point[1]+width[1]/2.0
-    bounds = (x_min, y_min, x_max, y_max)
+theta = bounds[0]
+# warning :: pixel coordinate is y axis inversion.
+pixel_bounds = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), bounds[1])))
 
-if form=='general':
-    # point order is counterclockwise.
-    # (theta, (4 points of spuare))
-    bounds = (0, ((x_min,y_min), (x_max,y_min), (x_max,y_max),(x_min, y_max)) )
+# for make searching point, Make roughly tile points
+bounds_bounds = self.xy_aligned(Polygon(pixel_bounds), form='minmax')
+min_x_s = (bounds_bounds[0,0] - TILE_SIZE[0]) // TILE_SIZE[0] * TILE_SIZE[0]
+min_y_s = (bounds_bounds[0,1] - TILE_SIZE[1]) // TILE_SIZE[1] * TILE_SIZE[1]
+max_x_s = (bounds_bounds[1,0] + TILE_SIZE[0]) // TILE_SIZE[0] * TILE_SIZE[0]
+max_y_s = (bounds_bounds[1,1] + TILE_SIZE[1]) // TILE_SIZE[1] * TILE_SIZE[1]
+
+# searching points range on pixel coordinate
+x_range = [ min_x_s, max_x_s, TILE_SIZE[0]]
+y_range = [ min_y_s, max_y_s, TILE_SIZE[1]]
+
+# Make coordinates of all searching points
+x_set = np.arange(x_range[0], x_range[1]+0.001, x_range[2]).reshape(-1,1)
+lx = x_set.shape[0]
+y_set = np.arange(y_range[0], y_range[1]+0.001, y_range[2])
+ly = y_set.shape[0]
+
+# Create xy pair
+points = np.empty((0,2),float)
+for y in y_set:
+    y_ = np.tile(y, lx).reshape(-1,1)
+    xy = np.concatenate([x_set, y_], axis=1)
+    points = np.concatenate([points,xy], axis=0)
+len_points = lx*ly
+
+# linking tile and points
+# Tiles are represented by 4 points number
+# 6---7---8 
+# | 2'| 3'|
+# 3---4---5
+# | 0'| 1'|       
+# 0---1---2
+# 0,1,2 : points number, 0',1',2' : tiles number
+# this case, tile 0' is [0, 1, 4, 3]
+
+lx1 = lx-1
+ly1 = ly-1
+tile = []
+tile_append = tile.append
+for j in range(ly1):
+    for i in range(lx1):
+        tile_append([i +j+lx1*j, i+1 +j+lx1*j, i+2+lx1 +j+lx1*j, i+1+lx1 +j+lx1*j])
+len_tile = len(tile)
+tile = np.array(tile)
+
+# judgement points are whether in bounds.
+points_is_in_bounds = np.array(list(map(functools.partial(self.inpolygon, polygon=pixel_bounds), points)))
+
+# tile have how many points in bounds.
+howmany_points_in_bounds = []
+howmany_points_in_bounds_append = howmany_points_in_bounds.append
+for i in range(len_tile):
+    howmuch_in_bounds = points_is_in_bounds[tile[i]].sum()
+    howmany_points_in_bounds_append(howmuch_in_bounds)
+
+# pick up tile having at least 1 points in bounds.
+is_in_bounds = [hpib !=0 for hpib in howmany_points_in_bounds]
+
+pickup_tile = points[tile[is_in_bounds,0]] / TILE_SIZE
+pickup_tile = pickup_tile.astype(int)
+
+pickup_tile_list = []
+for pit in pickup_tile:
+    x = pit[0]
+    y = pit[1]
+    path = filepath +str(x) + '/'+str(y) + file_extention
+    pickup_tile_list.append(path)
+
+if filepath:
+    # all database tile.
+    tilefile_list = glob.glob(filepath+'*/*')
+    isnot_exist_files = set(pickup_tile_list) - set(tilefile_list)
+
+    # if pickup_file is not exist, raise error
+    if not isnot_exist_files==set():
+        raise ValueError(str(isnot_exist_files)+' is not exist')
+        
+        
+#%%
 
 
 
 
 #%%
-#def terminal_node_aligned(self, minimum=None):
-
-self = LinkingPolylineImage(ls2)
-#form='bounds'
-polyline=ls2
-form='general'
-minimum=()
-#minimum=(0.010, 0.010)
-
-#%%
-if polyline=='self' and hasattr(self, 'polyline'):
-    polyline = self.polyline
-elif polyline=='self' and not hasattr(self, 'polyline'):
-    raise KeyError('polyline is not found. Please input polyline or in class instance')
-
-coords = np.array(polyline.coords)
-
-start_coord = coords[0]
-end_coord = coords[-1]
-# vector start to end
-vec_se = np.array([ end_coord[0]-start_coord[0], end_coord[1]-start_coord[1] ])
-# theta from x axis [rad]
-theta = np.arctan2( vec_se[1], vec_se[0] )
-
-def rotation_axis_matrix_2d(theta):
-    return np.array([[np.cos(theta), np.sin(theta)],[-np.sin(theta), np.cos(theta)]])
-rotation_axis_matrix = rotation_axis_matrix_2d(theta)
-
-# Rotation coordinate transformation
-coords_trans = np.dot(rotation_axis_matrix, coords.T).T
-
-bounds_trans = self.xy_aligned( LineString(coords_trans),form='general', minimum=minimum)
-rotation_axis_matrix_rev = rotation_axis_matrix_2d(-theta)
-bounds_ = np.dot(rotation_axis_matrix_rev, bounds_trans[1].T).T
-
-bounds = [theta, bounds_]
-
-#%%
-from shapely.geometry import Polygon
-Polygon(bounds_)
+#path = Path(filepath)
+#tilefile_list = list(path.glob('*/*'))
+#tilefile_list_str = [str(x) for x in tilefile_list]
+#tilefile_list_str
