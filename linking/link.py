@@ -12,11 +12,16 @@ class TileSegment:
         pass
     
     
+# 仕様を迷い中。クラスに完全にインスタンスを保存していくか、インスタンス依存をなくすか。
+# コンストラクタが微妙な仕様になってる、いるかなこれ？
+# そして、タイルセグメントのクラスをどう扱うか。迷い中。
+
+# あと、numpyでいくのか、リストでいくのかの仕様が微妙に統一されてない。暇なときに直す。
 
 class LinkingPolylineImage:
     
     # constructor for WKT
-    def __init__(self, wkt_polyline):
+    def __init__(self, wkt_polyline=None):
         """
         wkt_polyline (str or shapely.geometry.LineString) : WKT string or LineString object.
         For example, 'LINESTRING(139.07730102539062 36.00022956359412, 139.0814208984375 35.98022880246021)'
@@ -158,7 +163,7 @@ class LinkingPolylineImage:
         return tile_coordinate
     
     # ------------- Calculation Minimum Bounding Rectangle aligned xy axis ----------------
-    def xy_aligned(self, polyline='self',form='rectangle', minimum=[]):
+    def xy_aligned(self, polyline='self',form='rectangle', minimum=[], minimum_unit='latlng', zoom=18):
         """function to Minimum Bounding Rectangle aligned xy axis.
         polyline (shapely.geometry.LineString) : LineString object. If default, use class instance.
         
@@ -166,13 +171,20 @@ class LinkingPolylineImage:
         If 'rectangle', return [theta(=0), np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
         Theta is angle[rad] from x axis, this case is 0.
         
+        zoom and minimum_unit is using only mimimum!=[]
+        
         minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
+        minimum_unit (str) ['latlng', 'pixel', 'tile'] : specify minimum unit.'latlng' is latitude and longitude. 
         If width < minimum, width=minimum and Rectangle is helf width from center point.
         """
         if polyline=='self' and hasattr(self, 'polyline'):
             polyline = self.polyline
         elif polyline=='self' and not hasattr(self, 'polyline'):
             raise KeyError('polyline is not found. Please input polyline or in class instance')
+        
+        if isinstance(polyline, str):
+            polyline = shapely.wkt.loads(polyline)
+
         bounds = polyline.bounds
         x_min = bounds[0]
         y_min = bounds[1]
@@ -184,8 +196,13 @@ class LinkingPolylineImage:
         width = [ x_max-x_min, y_max-y_min]
 
         if not(minimum==() or minimum==[] or minimum==None):
-            # correct mimimum bounds
             try:
+                if minimum_unit=='pixel':
+                    minimum = self.pixel_to_latlng(minimum, zoom=zoom)
+                elif minimum_unit=='tile':
+                    minimum = self.tile_to_latlng(minimum, zoom=zoom)
+            
+            # correct mimimum bounds
                 if width[0] < minimum[0]:
                     width[0] = minimum[0]
                 if width[1] < minimum[1]:
@@ -210,7 +227,7 @@ class LinkingPolylineImage:
     def rotation_axis_matrix_2d(theta):
         return np.array([[np.cos(theta), np.sin(theta)],[-np.sin(theta), np.cos(theta)]])
     
-    def terminal_node_aligned(self, polyline='self', minimum=[]):
+    def terminal_node_aligned(self, polyline='self', minimum=[], minimum_unit='latlng', zoom=18):
         """function to Minimum Bounding Rectangle aligned vector start to end.
         polyline (shapely.geometry.LineString) : LineString object. If default, use class instance.
         minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
@@ -219,12 +236,13 @@ class LinkingPolylineImage:
         returns : [theta, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
         Theta is angle[rad] vector start to end from x axis.
         """
-
         if polyline=='self' and hasattr(self, 'polyline'):
             polyline = self.polyline
         elif polyline=='self' and not hasattr(self, 'polyline'):
             raise KeyError('polyline is not found. Please input polyline or in class instance')
         
+        if isinstance(polyline, str):
+            polyline = shapely.wkt.loads(polyline)
         coords = np.array(polyline.coords)  # all LineString coordinate.
 
         start_coord = coords[0]
@@ -239,7 +257,8 @@ class LinkingPolylineImage:
         coords_trans = np.dot(rotation_axis_matrix, coords.T).T
 
         # get_bounds
-        bounds_trans = self.xy_aligned( LineString(coords_trans),form='rectangle', minimum=minimum)
+        bounds_trans = self.xy_aligned( LineString(coords_trans),form='rectangle', \
+                minimum=minimum, minimum_unit=minimum_unit, zoom=zoom)
         # reverse coordinate transformation
         rotation_axis_matrix_rev = self.rotation_axis_matrix_2d(-theta)
         bounds_ = np.dot(rotation_axis_matrix_rev, bounds_trans[1].T).T
@@ -274,112 +293,7 @@ class LinkingPolylineImage:
                 if (y[i1] + (y[i2]-y[i1])/(x[i2]-x[i1])*(point_x-x[i1]) - point_y) > 0:
                     inside = not inside
 
-        return inside
-    def overlappingTiles(self, bounds, zoom=18, filepath=False, file_extention='.webp',TILE_SIZE='self'):
-        """
-        bounds (list) : input [theta, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]])] by xy_aligned or terminal node aligned.
-        zoom (int)[0-18] : zoom level.
-        filepath (str of False) : tiles database path. If path is --/--/--/zoom/x/y, --/--/--/.
-        Don't need it, if not False, check whether file exists.
-        file_extention (str) : If use filepath, specify file extention.
-        """
-        ### タイルのどの点もboundsに含まれないが、タイルの中に点があるケースを拾えていない。 ###
-        # boundsの各点に対して、その場所のタイルに点が含まれるかを判定してやればいい。しかしxy_alignedは問題なし。
-        
-        if TILE_SIZE=='self' and hasattr(self, 'TILE_SIZE'):
-            TILE_SIZE = self.TILE_SIZE
-        elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
-            raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
-                
-        if not filepath[-1:]=='/':
-            filepath = filepath+'/'
-        filepath = filepath + str(zoom) + '/'
-
-        if len(bounds)==4:  # if bounds=(x_min,ymin,x_max,y_max)
-            bounds = [0, np.array([[bounds[0],bounds[1]],[bounds[2],bounds[1]],[bounds[2],bounds[3]],[bounds[0], bounds[3]]]) ]
-
-        theta = bounds[0]
-        # warning :: pixel coordinate is y axis inversion.
-        pixel_bounds = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), bounds[1])))
-
-        # for make searching point, Make roughly tiles points
-        bounds_bounds = self.xy_aligned(Polygon(pixel_bounds), form='minmax')
-        min_x_s = (bounds_bounds[0,0] - TILE_SIZE[0]) // TILE_SIZE[0] * TILE_SIZE[0]
-        min_y_s = (bounds_bounds[0,1] - TILE_SIZE[1]) // TILE_SIZE[1] * TILE_SIZE[1]
-        max_x_s = (bounds_bounds[1,0] + TILE_SIZE[0]) // TILE_SIZE[0] * TILE_SIZE[0]
-        max_y_s = (bounds_bounds[1,1] + TILE_SIZE[1]) // TILE_SIZE[1] * TILE_SIZE[1]
-
-        # searching points range on pixel coordinate
-        x_range = [ min_x_s, max_x_s, TILE_SIZE[0]]
-        y_range = [ min_y_s, max_y_s, TILE_SIZE[1]]
-
-        # Make coordinates of all searching points
-        x_set = np.arange(x_range[0], x_range[1]+0.001, x_range[2]).reshape(-1,1)
-        lx = x_set.shape[0]
-        y_set = np.arange(y_range[0], y_range[1]+0.001, y_range[2])
-        ly = y_set.shape[0]
-
-        # Create xy pair
-        points = np.empty((0,2),float)
-        for y in y_set:
-            y_ = np.tile(y, lx).reshape(-1,1)
-            xy = np.concatenate([x_set, y_], axis=1)
-            points = np.concatenate([points,xy], axis=0)
-        len_points = lx*ly
-
-        # linking tiles and points
-        # Tiles are represented by 4 points number
-        # 6---7---8 
-        # | 2'| 3'|
-        # 3---4---5
-        # | 0'| 1'|       
-        # 0---1---2
-        # 0,1,2 : points number, 0',1',2' : tiles number
-        # this case, tiles 0' is [0, 1, 4, 3]
-        
-        lx1 = lx-1
-        ly1 = ly-1
-        tiles = []
-        tiles_append = tiles.append
-        for j in range(ly1):
-            for i in range(lx1):
-                tiles_append([i +j+lx1*j, i+1 +j+lx1*j, i+2+lx1 +j+lx1*j, i+1+lx1 +j+lx1*j])
-        len_tiles = len(tiles)
-        tiles = np.array(tiles)
-
-        # judgement points are whether in bounds.
-        points_is_in_bounds = np.array(list(map(functools.partial(self.inpolygon, polygon=pixel_bounds), points)))
-
-        # tiles have how many points in bounds.
-        howmany_points_in_bounds = []
-        howmany_points_in_bounds_append = howmany_points_in_bounds.append
-        for i in range(len_tiles):
-            howmuch_in_bounds = points_is_in_bounds[tiles[i]].sum()
-            howmany_points_in_bounds_append(howmuch_in_bounds)
-
-        # pick up tiles having at least 1 points in bounds.
-        is_in_bounds = [hpib !=0 for hpib in howmany_points_in_bounds]
-
-        pickup_tiles = points[tiles[is_in_bounds,0]] / TILE_SIZE
-        pickup_tiles = pickup_tiles.astype(int)
-
-        pickup_tiles_list = []
-        for pit in pickup_tiles:
-            x = pit[0]
-            y = pit[1]
-            path = filepath +str(x) + '/'+str(y) + file_extention
-            pickup_tiles_list.append(path)
-        
-        if filepath:
-            # all database tiles.
-            tilesfile_list = glob.glob(filepath+'*/*')
-            isnot_exist_files = set(pickup_tiles_list) - set(tilesfile_list)
-
-            # if pickup_file is not exist, raise error
-            if not isnot_exist_files==set():
-                raise ValueError(str(isnot_exist_files)+' is not exist')
-        
-        return pickup_tiles_list     
+        return inside    
     
     @staticmethod     
     def is_intersected_ls(a1, a2, b1, b2):
@@ -412,21 +326,8 @@ class LinkingPolylineImage:
 
         return a1 + (a2-a1) * t
     
-    def overlappingTileSegments(self, bounds, zoom=18, TILE_SIZE='self'):
 
-
-        if TILE_SIZE=='self' and hasattr(self, 'TILE_SIZE'):
-            TILE_SIZE = self.TILE_SIZE
-        elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
-            raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
-
-
-        if len(bounds)==4:  # if bounds=(x_min,ymin,x_max,y_max)
-            bounds = [0, np.array([[bounds[0],bounds[1]],[bounds[2],bounds[1]],[bounds[2],bounds[3]],[bounds[0], bounds[3]]]) ]
-
-        theta = bounds[0]
-        # warning :: pixel coordinate is y axis inversion.
-        pixel_bounds = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), bounds[1])))
+    def _make_tile_mesh(self, pixel_bounds, TILE_SIZE, is_lines=False):
 
         # for make searching point, Make roughly tile points
         bounds_bounds = self.xy_aligned(Polygon(pixel_bounds), form='minmax')
@@ -463,7 +364,6 @@ class LinkingPolylineImage:
         # 0,1,2 : points number, 0',1',2' : tiles number
         # this case, tiles 0' is [0, 1, 4, 3]
 
-
         lx1 = lx-1
         ly1 = ly-1
         tiles = []
@@ -473,35 +373,167 @@ class LinkingPolylineImage:
                 tiles_append([i +j+lx1*j, i+1 +j+lx1*j, i+2+lx1 +j+lx1*j, i+1+lx1 +j+lx1*j])
         len_tiles = len(tiles)
         tiles = np.array(tiles)
+        
+        if is_lines:
+            # linking tiles and lines, lines and points
+            lines = []  # all line segments composed of points
+            lines_append = lines.append
+            owner = []  # Which tile the lines belong to
+            owner_append = owner.append
+            for j in range(ly):
+                for i in range(lx1):
+                    lines_append([i +j+lx1*j, i+1 +j+lx1*j])
+                    if j==0:
+                        owner_append([i +lx1*j])
+                    elif j==ly-1:
+                        owner_append([i-lx1 + lx1*j])
+                    else:
+                        owner_append([i-lx1 + lx1*j, i +lx1*j])
+                        
+            for j in range(ly1):
+                for i in range(lx):
+                    lines_append([i +j+lx1*j, i+1+lx1 +j+lx1*j])
+                    if i==0:
+                        owner_append([i +lx1*j])
+                    elif i==lx-1:
+                        owner_append([i-1 + lx1*j])
+                    else:
+                        owner_append([i-1 + lx1*j, i +lx1*j])
 
-        # linking tiles and lines, lines and points
-        lines = []  # all line segments composed of points
-        lines_append = lines.append
-        owner = []  # Which tile the lines belong to
-        owner_append = owner.append
-        for j in range(ly):
-            for i in range(lx1):
-                lines_append([i +j+lx1*j, i+1 +j+lx1*j])
-                if j==0:
-                    owner_append([i +lx1*j])
-                elif j==ly-1:
-                    owner_append([i-lx1 + lx1*j])
-                else:
-                    owner_append([i-lx1 + lx1*j, i +lx1*j])
-                    
-        for j in range(ly1):
-            for i in range(lx):
-                lines_append([i +j+lx1*j, i+1+lx1 +j+lx1*j])
-                if i==0:
-                    owner_append([i +lx1*j])
-                elif i==lx-1:
-                    owner_append([i-1 + lx1*j])
-                else:
-                    owner_append([i-1 + lx1*j, i +lx1*j])
+            len_lines = len(lines)
+            lines = np.array(lines)
+            return points, len_points, tiles, len_tiles, lines, len_lines, owner
+        else:
+            return points, len_points, tiles, len_tiles
+        
+    def _pickup_file_search(self, pickup_tiles, zoom, filepath, file_extention):
+        if not filepath[-1:]=='/':
+            filepath = filepath+'/'
+            filepath = filepath + str(zoom) + '/'
+            pickup_tiles_list = []
+            for pit in pickup_tiles:
+                x = pit[0]
+                y = pit[1]
+                path = filepath +str(x) + '/'+str(y) + file_extention
+                pickup_tiles_list.append(path)
+            
+            # all database tiles.
+            tilesfile_list = glob.glob(filepath+'*/*')
+            isnot_exist_files = set(pickup_tiles_list) - set(tilesfile_list)
 
-        len_lines = len(lines)
-        lines = np.array(lines)
+            # if pickup_file is not exist, raise error
+            if not isnot_exist_files==set():
+                raise ValueError(str(isnot_exist_files)+' is not exist')
+        return pickup_tiles_list
+        
+    def overlappingTiles(self, bounds, zoom=18, filepath=False, file_extention='.webp',TILE_SIZE='self'):
+        """
+        bounds (list) : input [theta, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]])] by xy_aligned or terminal node aligned.
+        zoom (int)[0-18] : zoom level.
+        filepath (str of False) : tiles database path. If path is --/--/--/zoom/x/y, the part is --/--/--/.
+        Don't need it, if not False, check whether file exists.
+        file_extention (str) : If use filepath, specify file extention.
+        
+        returns : If filepath=False, return pickup_tiles as np.array([[x1, y1], [x2, y2],...])
+        elif filepash='path', return filepath list as ['filepath/zoom/x1/y1',...]
+        """
+        
+        if TILE_SIZE=='self' and hasattr(self, 'TILE_SIZE'):
+            TILE_SIZE = self.TILE_SIZE
+        elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
+            raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
 
+
+        if len(bounds)==4:  # if bounds=(x_min,ymin,x_max,y_max)
+            bounds = [0, np.array([[bounds[0],bounds[1]],[bounds[2],bounds[1]],[bounds[2],bounds[3]],[bounds[0], bounds[3]]]) ]
+
+        theta = bounds[0]
+        # warning :: pixel coordinate is y axis inversion.
+        pixel_bounds = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), bounds[1])))
+
+
+        points, len_points, tiles, len_tiles = self._make_tile_mesh(pixel_bounds, TILE_SIZE, is_lines=False)
+
+
+        # judgement points are whether in bounds.
+        points_is_in_bounds = np.array(list(map(functools.partial(self.inpolygon, polygon=pixel_bounds), points)))
+
+        # tiles have how many points in bounds.
+        howmany_points_in_bounds = []
+        howmany_points_in_bounds_append = howmany_points_in_bounds.append
+        for i in range(len_tiles):
+            howmuch_in_bounds = points_is_in_bounds[tiles[i]].sum()
+            howmany_points_in_bounds_append(howmuch_in_bounds)
+
+        # pick up tiles having at least 1 points in bounds.
+        is_in_bounds = [hpib !=0 for hpib in howmany_points_in_bounds]
+
+
+        # ---------Tile having bounds corner contains, because the case is exists that 
+        # tile all points is not in bounds, but bounds corner points is in the tile.--------
+
+        # tile_base_point
+        tile_base_points = []
+        tile_base_points_append = tile_base_points.append
+        for tile_num in range(len_tiles):
+            tile_base_points_append(points[tiles[tile_num][0]])
+        tile_base_points = np.array(tile_base_points)
+
+        # Calculate which position of which tile is relative to the 4 points of Bounds.
+        len_pixel_bounds = len(pixel_bounds)
+
+        bounds_corner_tiles_index = []
+        for i in range(len_pixel_bounds):  # i=0,1,2,3 if rectangle
+            corner_jugdment = -(tile_base_points - pixel_bounds[i])
+            tile_corner_index = np.where(np.all((0.0 <= corner_jugdment) * (corner_jugdment[:,[0]] < TILE_SIZE[0]) * (corner_jugdment[:,[1]] < TILE_SIZE[1]), axis=1) )
+            bounds_corner_tiles_index.append(tile_corner_index)
+            
+        bounds_corner_tiles_index = np.array(bounds_corner_tiles_index).reshape(-1,)
+        
+        for index in bounds_corner_tiles_index:
+            is_in_bounds[index] = True  
+        # -------------------------------------------------------
+        
+
+        pickup_tiles = points[tiles[is_in_bounds,0]] / TILE_SIZE
+        pickup_tiles = pickup_tiles.astype(int)
+
+        if filepath:
+            pickup_tiles_list = self._pickup_file_search(pickup_tiles, zoom, filepath, file_extention)
+            return pickup_tiles_list
+        else:
+            return pickup_tiles
+
+
+    def overlappingTileSegments(self, bounds, zoom=18, filepath=False, file_extention='.webp', TILE_SIZE='self'):
+        """
+        bounds (list) : input [theta, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]])] by xy_aligned or terminal node aligned.
+        zoom (int)[0-18] : zoom level.
+        filepath (str of False) : tiles database path. If path is --/--/--/zoom/x/y, the part is --/--/--/.
+        Don't need it, if not False, check whether file exists.
+        file_extention (str) : If use filepath, specify file extention.
+        
+        returns : If filepath=False, return pickup_tiles, pickup_tiles_intersection as np.array([[x1, y1], [x2, y2],...]), 
+        np.array([[x11,y11],[x12,y12],[x13,y13]], ...). x11, y11 and x12, y12 is intersections of bounds lines and tiles lines.
+        x13, y13 is bounds corner points in the tiles. If intersections or corner points are not exist, it is in np.nan.
+        elif filepath='anypath', return pickup_tiles, pickup_tiles_intersection, pickup_tiles_list. pickup_tile_list as ['filepath/zoom/x1/y1',...].
+        """
+        
+
+        if TILE_SIZE=='self' and hasattr(self, 'TILE_SIZE'):
+            TILE_SIZE = self.TILE_SIZE
+        elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
+            raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
+
+        if len(bounds)==4:  # if bounds=(x_min,ymin,x_max,y_max)
+            bounds = [0, np.array([[bounds[0],bounds[1]],[bounds[2],bounds[1]],[bounds[2],bounds[3]],[bounds[0], bounds[3]]]) ]
+
+        theta = bounds[0]
+        # warning :: pixel coordinate is y axis inversion.
+        pixel_bounds = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), bounds[1])))
+
+
+        points, len_points, tiles, len_tiles, lines, len_lines, owner = self._make_tile_mesh(pixel_bounds, TILE_SIZE, is_lines=True)
 
         
         # judgement points are whether in bounds.
@@ -636,6 +668,11 @@ class LinkingPolylineImage:
 
         pickup_tiles_intersection = tiles_intersection[is_in_bounds]
 
-        return pickup_tiles, pickup_tiles_intersection
+
+        if filepath:
+            pickup_tiles_list = self._pickup_file_search(pickup_tiles, zoom, filepath, file_extention)
+            return pickup_tiles, pickup_tiles_intersection, pickup_tiles_list
+        else:
+            return pickup_tiles, pickup_tiles_intersection
     
 
