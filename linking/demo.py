@@ -48,6 +48,11 @@ print(bounds2)
 # bounds form : [theta, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
 # theta is rotation angle[rad] from x axis.
 # xy_aligned only, form='minmax' as np.array([x_min,y_min],[x_max,y_max]) for using another function.
+#%%
+Polygon(bounds1[1])
+
+#%%
+Polygon(bounds2[1])
 
 #%%
 # file path is defined, return file path list.

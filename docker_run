@@ -4,3 +4,10 @@ docker bulid . -t linkingimage
 # for vscode run
 docker run -it -p 8888:8888 --name linking linkingimage
 # (-p は明示して書いてるが、dockerfileにも書いてるのでどっちでもいい)
+
+# docker後
+git config --global user.name 'aaa'
+git config --global user.email aaa@aaa.com
+
+# vscodeの拡張機能で、Remote containerを入れる。これでdockerにvscodeからアクセス可
+# vscodeの拡張機能で、pythonをdockerの方にもインストール。これで、マジックコマンドjupyter化や、jupyterを開ける。
