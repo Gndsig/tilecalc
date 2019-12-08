@@ -21,7 +21,7 @@ class TileSegment:
 class LinkingPolylineImage:
     
     # constructor for WKT
-    def __init__(self, wkt_polyline=None):
+    def __init__(self, wkt_polyline=None, zoom=18, tile_size=(256,256)):
         """
         wkt_polyline (str or shapely.geometry.LineString) : WKT string or LineString object.
         For example, 'LINESTRING(139.07730102539062 36.00022956359412, 139.0814208984375 35.98022880246021)'
@@ -31,11 +31,12 @@ class LinkingPolylineImage:
             self.polyline = shapely.wkt.loads(wkt_polyline)
         else:
             self.polyline = wkt_polyline
-            
-        self.TILE_SIZE=(256, 256)
+        
+        self.zoom = zoom
+        self.TILE_SIZE=tile_size
     
     # ------------- convert latitude and longitude to XYZtile or vice versa ----------------
-    @classmethod
+
     def latlng_to_pixel(self,coordinate, zoom=18, is_round=False):
         """latitude and longitude convert to pixel coordinate
         pixel coordinate explanation:https://www.trail-note.net/tech/coordinate/
@@ -96,7 +97,7 @@ class LinkingPolylineImage:
         
         return tile_coordinate
     
-    @classmethod
+
     def pixel_to_latlng(self, pixel_coordinate, zoom=18):
         """pixel coordinate convert to latitude and longitude
         pixel coordinate explanation : https://www.trail-note.net/tech/coordinate/
@@ -406,27 +407,8 @@ class LinkingPolylineImage:
         else:
             return points, len_points, tiles, len_tiles
         
-    def _pickup_file_search(self, pickup_tiles, zoom, filepath, file_extention):
-        if not filepath[-1:]=='/':
-            filepath = filepath+'/'
-            filepath = filepath + str(zoom) + '/'
-            pickup_tiles_list = []
-            for pit in pickup_tiles:
-                x = pit[0]
-                y = pit[1]
-                path = filepath +str(x) + '/'+str(y) + file_extention
-                pickup_tiles_list.append(path)
-            
-            # all database tiles.
-            tilesfile_list = glob.glob(filepath+'*/*')
-            isnot_exist_files = set(pickup_tiles_list) - set(tilesfile_list)
-
-            # if pickup_file is not exist, raise error
-            if not isnot_exist_files==set():
-                raise ValueError(str(isnot_exist_files)+' is not exist')
-        return pickup_tiles_list
         
-    def overlappingTiles(self, bounds, zoom=18, filepath=False, file_extention='.webp',TILE_SIZE='self'):
+    def overlappingTiles(self, bounds, zoom='self', TILE_SIZE='self'):
         """
         bounds (list) : input [theta, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]])] by xy_aligned or terminal node aligned.
         zoom (int)[0-18] : zoom level.
@@ -442,6 +424,11 @@ class LinkingPolylineImage:
             TILE_SIZE = self.TILE_SIZE
         elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
             raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
+        
+        if zoom=='self' and hasattr(self, 'zoom'):
+            zoom = self.zoom
+        elif zoom=='self' and not hasattr(self, 'zoom'):
+            raise KeyError('zoom is not found. Please input zoom or in class instance')
 
 
         if len(bounds)==4:  # if bounds=(x_min,ymin,x_max,y_max)
@@ -493,25 +480,16 @@ class LinkingPolylineImage:
         for index in bounds_corner_tiles_index:
             is_in_bounds[index] = True  
         # -------------------------------------------------------
-        
 
         pickup_tiles = points[tiles[is_in_bounds,0]] / TILE_SIZE
         pickup_tiles = pickup_tiles.astype(int)
 
-        if filepath:
-            pickup_tiles_list = self._pickup_file_search(pickup_tiles, zoom, filepath, file_extention)
-            return pickup_tiles_list
-        else:
-            return pickup_tiles
+        return pickup_tiles
 
-
-    def overlappingTileSegments(self, bounds, zoom=18, filepath=False, file_extention='.webp', TILE_SIZE='self'):
+    def overlappingTileSegments(self, bounds, zoom='self', TILE_SIZE='self'):
         """
         bounds (list) : input [theta, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]])] by xy_aligned or terminal node aligned.
         zoom (int)[0-18] : zoom level.
-        filepath (str of False) : tiles database path. If path is --/--/--/zoom/x/y, the part is --/--/--/.
-        Don't need it, if not False, check whether file exists.
-        file_extention (str) : If use filepath, specify file extention.
         
         returns : If filepath=False, return pickup_tiles, pickup_tiles_intersection as np.array([[x1, y1], [x2, y2],...]), 
         np.array([[x11,y11],[x12,y12],[x13,y13]], ...). x11, y11 and x12, y12 is intersections of bounds lines and tiles lines.
@@ -524,6 +502,11 @@ class LinkingPolylineImage:
             TILE_SIZE = self.TILE_SIZE
         elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
             raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
+        
+        if zoom=='self' and hasattr(self, 'zoom'):
+            zoom = self.zoom
+        elif zoom=='self' and not hasattr(self, 'zoom'):
+            raise KeyError('zoom is not found. Please input zoom or in class instance')
 
         if len(bounds)==4:  # if bounds=(x_min,ymin,x_max,y_max)
             bounds = [0, np.array([[bounds[0],bounds[1]],[bounds[2],bounds[1]],[bounds[2],bounds[3]],[bounds[0], bounds[3]]]) ]
@@ -668,11 +651,36 @@ class LinkingPolylineImage:
 
         pickup_tiles_intersection = tiles_intersection[is_in_bounds]
 
-
-        if filepath:
-            pickup_tiles_list = self._pickup_file_search(pickup_tiles, zoom, filepath, file_extention)
-            return pickup_tiles, pickup_tiles_intersection, pickup_tiles_list
-        else:
-            return pickup_tiles, pickup_tiles_intersection
+        return pickup_tiles, pickup_tiles_intersection
     
 
+    def _pickup_file_search(self, pickup_tiles, zoom, filepath, file_extention):
+        if not filepath[-1:]=='/':
+            filepath = filepath+'/'
+        filepath = filepath + str(zoom) + '/'
+            
+        pickup_tiles_list = []
+        for pit in pickup_tiles:
+            x = pit[0]
+            y = pit[1]
+            path = filepath +str(x) + '/'+str(y) + file_extention
+            pickup_tiles_list.append(path)
+            
+        # all database tiles.
+        tilesfile_list = glob.glob(filepath+'*/*')
+        isnot_exist_files = set(pickup_tiles_list) - set(tilesfile_list)
+
+        # if pickup_file is not exist, raise error
+        if not isnot_exist_files==set():
+            raise ValueError(str(isnot_exist_files)+' is not exist')
+        return pickup_tiles_list
+    
+    
+    def concat_image(self,filepath=False, file_extention='.webp'):
+        """
+        filepath (str of False) : tiles database path. If path is --/--/--/zoom/x/y, the part is --/--/--/.
+        Don't need it, if not False, check whether file exists.
+        file_extention (str) : If use filepath, specify file extention.
+        """
+        
+        pickup_tiles_list = self._pickup_file_search(pickup_tiles, zoom, filepath, file_extention)

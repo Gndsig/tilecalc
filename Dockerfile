@@ -30,9 +30,14 @@ RUN pip install --upgrade pip \
     && pip install Pillow \
     && pip install ipython[all] \
     && pip install jupyter \
-    && pip install shapely[vectorized]
+    && pip install shapely[vectorized] \
+    && sudo apt update \
+    && sudo apt -y upgrade \
+    && sudo apt -y install build-essential \
+    cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev \
+    python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libdc1394-22-dev \
+    && pip install opencv-python
 
-    
 WORKDIR /workdir
 
 # setting for jupyter
