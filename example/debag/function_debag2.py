@@ -2,6 +2,12 @@
 import numpy as np
 from shapely.geometry import LineString
 import shapely.wkt
+import os
+import sys
+#os.getcwd()
+os.chdir("/workdir/linking_polyline_image/linking/")
+
+from link import *
 
 #%%
 #import sys
@@ -29,15 +35,35 @@ list(ls2.coords)
 
 #%%
 #def xy_aligned(self, minimum=None):
-
 self = LinkingPolylineImage(ls2)
+polyline = 'self'
 #form='bounds'
 form='general'
 #minimum=()
 minimum=(0.010, 0.010)
+buffer_ = 0.010
+unit='pixel'
+zoom = 18
 
-# %%
-bounds = self.polyline.bounds
+if polyline=='self' and hasattr(self, 'polyline'):
+    polyline = self.polyline
+elif polyline=='self' and not hasattr(self, 'polyline'):
+    raise KeyError('polyline is not found. Please input polyline or in class instance')
+
+if isinstance(polyline, str):
+    polyline = shapely.wkt.loads(polyline)
+
+coords = list(polyline.coords)
+
+if unit=='latlng':
+    coords = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), coords)))
+    polyline = LineString(coords)
+elif unit=='pixel':
+    pass
+else:
+    raise ValueError("unit is 'latlng' or 'pixel")
+
+bounds = polyline.bounds
 x_min = bounds[0]
 y_min = bounds[1]
 x_max = bounds[2]
@@ -47,29 +73,54 @@ center_point = ( (x_min+x_max)/2.0 , (y_min+y_max)/2.0 )
 
 width = [ x_max-x_min, y_max-y_min]
 
-if not(minimum==() or minimum==[] or minimum==None):
-    # correct mimimum bounds
-    try:
-        if width[0] < minimum[0]:
-            width[0] = minimum[0]
-        if width[1] < minimum[1]:
-            width[1] = minimum[1]
-    except:
-        raise KeyError('minimum is (x_min, y_min) of tuple or list')
     
-    x_min = center_point[0]-width[0]/2.0
-    y_min = center_point[1]-width[1]/2.0
-    x_max = center_point[0]+width[0]/2.0
-    y_max = center_point[1]+width[1]/2.0
-    bounds = (x_min, y_min, x_max, y_max)
+#%%      
+if (not (buffer_==False or buffer_==None or buffer_==str)) and \
+    (not (minimum==() or minimum==[] or minimum==None)):
+            
+    if not (minimum==() or minimum==[] or minimum==None):
+        
+        try:
+            if unit=='latlng':
+                minimum = self.latlng_to_pixel(minimum, zoom=zoom)
+            elif unit=='pixel':
+                pass
+            elif unit=='tile':
+                minimum = self.tile_to_pixel(minimum, zoom=zoom)    
+        # correct mimimum bounds
+            if width[0] < minimum[0]:
+                width[0] = minimum[0]
+            if width[1] < minimum[1]:
+                width[1] = minimum[1]
+        except:
+            raise KeyError('minimum is (x_min, y_min) of tuple or list')
+    
+        x_min = center_point[0]-width[0]/2.0
+        y_min = center_point[1]-width[1]/2.0
+        x_max = center_point[0]+width[0]/2.0
+        y_max = center_point[1]+width[1]/2.0
+        
+    if not (buffer_==False or buffer_==None or buffer_==str):
+        if unit=='latlng':
+            buffer_ = self.latlng_to_pixel(buffer_, zoom=zoom, is_round=False)
+        elif unit=='pixel':
+            pass
+        elif unit=='tile':
+            buffer_ = self.tile_to_pixel(buffer_, zoom=zoom, is_round=False)
+            
+        x_min = x_min - buffer_
+        y_min = y_min - buffer_
+        x_max = x_max + buffer_
+        y_max = y_max + buffer_
+        
+bounds = np.array([[x_min, y_min], [x_max, y_max]])
 
-if form=='general':
+if form=='rectangle':
     # point order is counterclockwise.
-    # (theta, (4 points of spuare))
-    bounds = (0, ((x_min,y_min), (x_max,y_min), (x_max,y_max),(x_min, y_max)) )
-
-
-
+    # [theta from x axis, np.array([4 points of spuare])]
+    bounds = [0, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
+#%%
+bounds
 
 #%%
 #def terminal_node_aligned(self, minimum=None):

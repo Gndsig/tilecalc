@@ -1,10 +1,6 @@
 # using masic command #%% as vscode like jupyter.
 
-# 長方形をpixelの方で作る。 ずれる。
-# タイルセグメントの方も作る
-# タイルセグメントの情報で渡す
-# ライブラリ化
-# バッファを取れるようにする。
+# 長方形をpixelの方で作るためのデバッグ
 
 #%%
 import os
@@ -38,6 +34,160 @@ print(ls2.geom_type)
 print(list(ls2.coords))
 ls2
 
+#%%
+lpi = LinkingPolylineImage(ls1)
+bounds_ = lpi.xy_aligned()
+bounds_
+
+
+#%%
+#xy_aligned
+self=LinkingPolylineImage(ls1)
+polyline='self'
+form='rectangle'
+minimum=[]
+#minimum = [10,10]
+unit='pixel'
+zoom=18
+
+
+#%%
+a=  """function to Minimum Bounding Rectangle aligned xy axis.
+    polyline (shapely.geometry.LineString) : LineString object. If default, use class instance.
+    
+    form (str)['minmax', 'rectangle'] : If 'minmax', return np.array([[x_min, y_min], [x_max, y_max]]).
+    If 'rectangle', return [theta(=0), np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
+    Theta is angle[rad] from x axis, this case is 0.
+    
+    zoom and minimum_unit is using only mimimum!=[]
+    
+    minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
+    unit (str) ['latlng', 'pixel'] : specify minimum unit.'latlng' is latitude and longitude. 
+    If unit is pixel, return unit is pixel and minimum unit is pixel, 
+    else if unit is latlng, return unit is longtude and latitude, and minimum unit is longtude and latitude.
+    
+    Finaly, the unit of minimum and return should be unified.
+    Warning, If unit is "latlng", later convert "latlng" to "pixel", point of rectangle is a little shift, no more parallelograms.
+    
+    If width < minimum, width=minimum and Rectangle is helf width from center point.
+    """
+
+if polyline=='self' and hasattr(self, 'polyline'):
+    polyline = self.polyline
+elif polyline=='self' and not hasattr(self, 'polyline'):
+    raise KeyError('polyline is not found. Please input polyline or in class instance')
+
+if isinstance(polyline, str):
+    polyline = shapely.wkt.loads(polyline)
+
+
+raw_bounds = polyline.bounds  # (x_min, y_min, xmax, y_max)
+raw_bounds = (raw_bounds[0], raw_bounds[1]), (raw_bounds[2],raw_bounds[3])
+
+#%%
+if unit=='pixel':
+    raw_bounds = tuple(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), raw_bounds)))
+elif unit=='latlng':
+    pass
+else:
+    raise ValueError('unit is "pixel" or "latlng" of [x, y]')
+
+#%%
+x_min = raw_bounds[0][0]
+y_min = raw_bounds[0][1]
+x_max = raw_bounds[1][0]
+y_max = raw_bounds[1][1]
+
+center_point = ( (x_min+x_max)/2.0 , (y_min+y_max)/2.0 )
+
+width = [ x_max-x_min, y_max-y_min ]
+
+if not(minimum==() or minimum==[] or minimum==None):
+    try:
+        # correct mimimum bounds
+        if width[0] < minimum[0]:
+            width[0] = minimum[0]
+        if width[1] < minimum[1]:
+            width[1] = minimum[1]
+    except:
+        raise KeyError('minimum is (x_min, y_min) of tuple or list')
+    
+    x_min = center_point[0]-width[0]/2.0
+    y_min = center_point[1]-width[1]/2.0
+    x_max = center_point[0]+width[0]/2.0
+    y_max = center_point[1]+width[1]/2.0
+bounds = np.array([[x_min, y_min], [x_max, y_max]])
+
+if form=='rectangle':
+    # point order is counterclockwise.
+    # [theta from x axis, np.array([4 points of spuare])]
+    bounds = [0, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
+
+
+#%%
+
+#@staticmethod
+#def rotation_axis_matrix_2d(theta):
+#    return np.array([[np.cos(theta), np.sin(theta)],[-np.sin(theta), np.cos(theta)]])
+
+
+# terminal_node_aligned
+
+self=LinkingPolylineImage(ls1)
+polyline='self'
+minimum=[]
+unit='latlng'
+zoom=18
+
+a="""function to Minimum Bounding Rectangle aligned vector start to end.
+    polyline (shapely.geometry.LineString) : LineString object. If default, use class instance.
+    minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
+    If width < minimum, width=minimum and Rectangle is helf width from center point.
+    
+    unit (str) ['latlng', 'pixel'] : specify minimum unit.'latlng' is latitude and longitude. 
+    If unit is pixel, return unit is pixel and minimum unit is pixel, 
+    else if unit is latlng, return unit is longtude and latitude, and minimum unit is longtude and latitude.
+    
+    Finaly, the unit of minimum and return should be unified.
+    Warning, If unit is "latlng", later convert "latlng" to "pixel", point of rectangle is a little shift, no more parallelograms.
+    
+    
+    returns : [theta, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
+    Theta is angle[rad] vector start to end from x axis.
+    """
+
+if polyline=='self' and hasattr(self, 'polyline'):
+    polyline = self.polyline
+elif polyline=='self' and not hasattr(self, 'polyline'):
+    raise KeyError('polyline is not found. Please input polyline or in class instance')
+
+if isinstance(polyline, str):
+    polyline = shapely.wkt.loads(polyline)
+coords = np.array(polyline.coords)  # all LineString coordinate.
+
+#%%
+
+start_coord = coords[0]
+end_coord = coords[-1]
+# vector start to end
+vec_se = np.array([ end_coord[0]-start_coord[0], end_coord[1]-start_coord[1] ])
+# theta from x axis [rad]
+theta = np.arctan2( vec_se[1], vec_se[0] )
+
+rotation_axis_matrix = self.rotation_axis_matrix_2d(theta)
+# Coordinate transformation using rotation.
+coords_trans = np.dot(rotation_axis_matrix, coords.T).T
+
+# get_bounds
+bounds_trans = self.xy_aligned( LineString(coords_trans),form='rectangle', \
+        minimum=minimum, minimum_unit=minimum_unit, zoom=zoom)
+# reverse coordinate transformation
+rotation_axis_matrix_rev = self.rotation_axis_matrix_2d(-theta)
+bounds_ = np.dot(rotation_axis_matrix_rev, bounds_trans[1].T).T
+bounds = [theta, bounds_]
+
+#%%
+bounds
 
 #%%
 lpi = LinkingPolylineImage(ls1)
@@ -196,11 +346,12 @@ pixel_coords_tuple = tuple(map(tuple, pixel_coords))
 polyline_image = concated_image.copy()
 draw = ImageDraw.Draw(polyline_image)
 draw.line(pixel_coords_tuple, fill=(255, 255, 0), width=10)
-
+polyline_image
 
 # drow bounds
 theta = bounds[0]
 pixel_bounds = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), bounds[1])))
+
 pixel_bounds[:,0] -= min_x * TILE_SIZE[0]
 pixel_bounds[:,1] -= min_y * TILE_SIZE[1]
 pixel_bounds_drow = np.concatenate([pixel_bounds, pixel_bounds[[0]]], axis=0)
@@ -308,3 +459,88 @@ def make_dummy(im, color=(0,0,0)):
     height, width = im.shape[:2]
     color = np.array(color)
     return np.tile(color, (height,width,1))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#%%
+
+
+#%%
+
+
+#%%
+
+
+#%%
+# old function
+    def ___xy_aligned(self, polyline='self',form='rectangle', minimum=[], minimum_unit='latlng', zoom=18):
+        """function to Minimum Bounding Rectangle aligned xy axis.
+        polyline (shapely.geometry.LineString) : LineString object. If default, use class instance.
+        
+        form (str)['minmax', 'rectangle'] : If 'minmax', return np.array([[x_min, y_min], [x_max, y_max]]).
+        If 'rectangle', return [theta(=0), np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
+        Theta is angle[rad] from x axis, this case is 0.
+        
+        zoom and minimum_unit is using only mimimum!=[]
+        
+        minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
+        minimum_unit (str) ['latlng', 'pixel', 'tile'] : specify minimum unit.'latlng' is latitude and longitude. 
+        If width < minimum, width=minimum and Rectangle is helf width from center point.
+        """
+        if polyline=='self' and hasattr(self, 'polyline'):
+            polyline = self.polyline
+        elif polyline=='self' and not hasattr(self, 'polyline'):
+            raise KeyError('polyline is not found. Please input polyline or in class instance')
+        
+        if isinstance(polyline, str):
+            polyline = shapely.wkt.loads(polyline)
+
+        bounds = polyline.bounds
+        x_min = bounds[0]
+        y_min = bounds[1]
+        x_max = bounds[2]
+        y_max = bounds[3]
+
+        center_point = ( (x_min+x_max)/2.0 , (y_min+y_max)/2.0 )
+
+        width = [ x_max-x_min, y_max-y_min]
+
+        if not(minimum==() or minimum==[] or minimum==None):
+            try:
+                if minimum_unit=='pixel':
+                    minimum = self.pixel_to_latlng(minimum, zoom=zoom)
+                elif minimum_unit=='tile':
+                    minimum = self.tile_to_latlng(minimum, zoom=zoom)
+            
+            # correct mimimum bounds
+                if width[0] < minimum[0]:
+                    width[0] = minimum[0]
+                if width[1] < minimum[1]:
+                    width[1] = minimum[1]
+            except:
+                raise KeyError('minimum is (x_min, y_min) of tuple or list')
+            
+            x_min = center_point[0]-width[0]/2.0
+            y_min = center_point[1]-width[1]/2.0
+            x_max = center_point[0]+width[0]/2.0
+            y_max = center_point[1]+width[1]/2.0
+        bounds = np.array([[x_min, y_min], [x_max, y_max]])
+
+        if form=='rectangle':
+            # point order is counterclockwise.
+            # [theta from x axis, np.array([4 points of spuare])]
+            bounds = [0, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
+        
+        return bounds

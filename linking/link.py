@@ -11,12 +11,16 @@ class TileSegment:
     def __init__(self):
         pass
     
-    
 # 仕様を迷い中。クラスに完全にインスタンスを保存していくか、インスタンス依存をなくすか。
 # コンストラクタが微妙な仕様になってる、いるかなこれ？
 # そして、タイルセグメントのクラスをどう扱うか。迷い中。
 
 # あと、numpyでいくのか、リストでいくのかの仕様が微妙に統一されてない。暇なときに直す。
+
+# やること
+# 順番を直して、誤差を修正する。
+# タイルをくっつけるverを作る。
+
 
 class LinkingPolylineImage:
     
@@ -164,7 +168,8 @@ class LinkingPolylineImage:
         return tile_coordinate
     
     # ------------- Calculation Minimum Bounding Rectangle aligned xy axis ----------------
-    def xy_aligned(self, polyline='self',form='rectangle', minimum=[], minimum_unit='latlng', zoom=18):
+    
+    def xy_aligned(self, polyline='self',form='rectangle', minimum=[], unit='pixel', zoom=18):
         """function to Minimum Bounding Rectangle aligned xy axis.
         polyline (shapely.geometry.LineString) : LineString object. If default, use class instance.
         
@@ -175,35 +180,47 @@ class LinkingPolylineImage:
         zoom and minimum_unit is using only mimimum!=[]
         
         minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
-        minimum_unit (str) ['latlng', 'pixel', 'tile'] : specify minimum unit.'latlng' is latitude and longitude. 
+        unit (str) ['latlng', 'pixel'] : specify minimum unit.'latlng' is latitude and longitude. 
+        If unit is pixel, return unit is pixel and minimum unit is pixel, 
+        else if unit is latlng, return unit is longtude and latitude, and minimum unit is longtude and latitude.
+        
+        Finaly, the unit of minimum and return should be unified.
+        Warning, If unit is "latlng", later convert "latlng" to "pixel", point of rectangle is a little shift, no more parallelograms.
+        
         If width < minimum, width=minimum and Rectangle is helf width from center point.
         """
+
         if polyline=='self' and hasattr(self, 'polyline'):
             polyline = self.polyline
         elif polyline=='self' and not hasattr(self, 'polyline'):
             raise KeyError('polyline is not found. Please input polyline or in class instance')
-        
+
         if isinstance(polyline, str):
             polyline = shapely.wkt.loads(polyline)
 
-        bounds = polyline.bounds
-        x_min = bounds[0]
-        y_min = bounds[1]
-        x_max = bounds[2]
-        y_max = bounds[3]
+
+        raw_bounds = polyline.bounds  # (x_min, y_min, xmax, y_max)
+        raw_bounds = (raw_bounds[0], raw_bounds[1]), (raw_bounds[2],raw_bounds[3])
+
+        if unit=='pixel':
+            raw_bounds = tuple(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), raw_bounds)))
+        elif unit=='latlng':
+            pass
+        else:
+            raise ValueError('unit is "pixel" or "latlng" of [x, y]')
+
+        x_min = raw_bounds[0][0]
+        y_min = raw_bounds[0][1]
+        x_max = raw_bounds[1][0]
+        y_max = raw_bounds[1][1]
 
         center_point = ( (x_min+x_max)/2.0 , (y_min+y_max)/2.0 )
 
-        width = [ x_max-x_min, y_max-y_min]
+        width = [ x_max-x_min, y_max-y_min ]
 
         if not(minimum==() or minimum==[] or minimum==None):
             try:
-                if minimum_unit=='pixel':
-                    minimum = self.pixel_to_latlng(minimum, zoom=zoom)
-                elif minimum_unit=='tile':
-                    minimum = self.tile_to_latlng(minimum, zoom=zoom)
-            
-            # correct mimimum bounds
+                # correct mimimum bounds
                 if width[0] < minimum[0]:
                     width[0] = minimum[0]
                 if width[1] < minimum[1]:
@@ -221,7 +238,7 @@ class LinkingPolylineImage:
             # point order is counterclockwise.
             # [theta from x axis, np.array([4 points of spuare])]
             bounds = [0, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
-        
+
         return bounds
     
     @staticmethod

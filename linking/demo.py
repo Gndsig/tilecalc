@@ -56,16 +56,16 @@ Polygon(bounds2[1])
 
 #%%
 # file path is defined, return file path list.
-pickup_tile_path = lpi.overlappingTiles(bounds1, zoom=zoom, filepath=filepath)
+pickup_tile_path = lpi.overlappingTiles(bounds1, zoom=zoom)
 pickup_tile_path
 #%%
 # file path is not defined, return xy tile coordinate array.
-pickup_tiles_ = lpi.overlappingTiles(bounds1, zoom=zoom, filepath=False)
+pickup_tiles_ = lpi.overlappingTiles(bounds1, zoom=zoom)
 pickup_tiles_
 
 # %%
 # file path is not defined, return xy tile coordinate array and where intersection is in tile.
-pickup_tiles, pickup_tiles_intersection = lpi.overlappingTileSegments(bounds1, zoom=zoom, filepath=False)
+pickup_tiles, pickup_tiles_intersection = lpi.overlappingTileSegments(bounds1, zoom=zoom)
 print(pickup_tiles)
 print(pickup_tiles_intersection)
 
@@ -76,7 +76,6 @@ print(pickup_tiles_intersection)
 
 # %%
 # file path is defined, return plus file path list.
-pickup_tiles, pickup_tiles_intersection, pickup_tiles_path = lpi.overlappingTileSegments(bounds2, zoom=zoom, filepath=filepath)
+pickup_tiles, pickup_tiles_intersection = lpi.overlappingTileSegments(bounds2, zoom=zoom)
 print(pickup_tiles)
 print(pickup_tiles_intersection)
-print(pickup_tiles_path)
