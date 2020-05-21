@@ -25,19 +25,18 @@ class TileSegment:
 class LinkingPolylineImage:
     
     # constructor for WKT
-    def __init__(self, wkt_polyline=None, zoom=18, tile_size=(256,256)):
+    def __init__(self, zoom=18, tile_size=(256,256)):
         """
         wkt_polyline (str or shapely.geometry.LineString) : WKT string or LineString object.
         For example, 'LINESTRING(139.07730102539062 36.00022956359412, 139.0814208984375 35.98022880246021)'
         ,or shapely.geometry.LineString([(139.07455444335938, 35.9913409624497), (139.07730102539062, 35.99356320664446)])
         """
-        if isinstance(wkt_polyline, str):
-            self.polyline = shapely.wkt.loads(wkt_polyline)
-        else:
-            self.polyline = wkt_polyline
         
         self.zoom = zoom
         self.TILE_SIZE=tile_size
+        
+        # convert polyline unit latitude and longitude to pixel
+        
     
     # ------------- convert latitude and longitude to XYZtile or vice versa ----------------
 
@@ -169,7 +168,7 @@ class LinkingPolylineImage:
     
     # ------------- Calculation Minimum Bounding Rectangle aligned xy axis ----------------
     
-    def xy_aligned(self, polyline='self',form='rectangle', minimum=[], unit='pixel', zoom=18):
+    def xy_aligned(self, polyline, form='rectangle', minimum=[], unit=['latlng','pixel'], zoom=18):
         """function to Minimum Bounding Rectangle aligned xy axis.
         polyline (shapely.geometry.LineString) : LineString object. If default, use class instance.
         
@@ -180,8 +179,10 @@ class LinkingPolylineImage:
         zoom and minimum_unit is using only mimimum!=[]
         
         minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
-        unit (str) ['latlng', 'pixel'] : specify minimum unit.'latlng' is latitude and longitude. 
-        If unit is pixel, return unit is pixel and minimum unit is pixel, 
+        unit (list of str) [['latlng', 'pixel'], ['pixel', 'pixel'] ] : The first in the list shows the unit of input.
+        THe second in the list shows the unit of output.
+        And minimum unit follows the second in the list.
+        If unit is ['latlng','pixel'], the inputed polyline unit is longtude and latitude, and return unit is pixel and minimum unit is pixel, 
         else if unit is latlng, return unit is longtude and latitude, and minimum unit is longtude and latitude.
         
         Finaly, the unit of minimum and return should be unified.
@@ -190,24 +191,25 @@ class LinkingPolylineImage:
         If width < minimum, width=minimum and Rectangle is helf width from center point.
         """
 
-        if polyline=='self' and hasattr(self, 'polyline'):
-            polyline = self.polyline
-        elif polyline=='self' and not hasattr(self, 'polyline'):
-            raise KeyError('polyline is not found. Please input polyline or in class instance')
+        #if polyline=='self' and hasattr(self, 'polyline'):
+        #    polyline = self.polyline
+        #elif polyline=='self' and not hasattr(self, 'polyline'):
+        #    raise KeyError('polyline is not found. Please input polyline or in class instance')
 
         if isinstance(polyline, str):
             polyline = shapely.wkt.loads(polyline)
-
-
+        
         raw_bounds = polyline.bounds  # (x_min, y_min, xmax, y_max)
         raw_bounds = (raw_bounds[0], raw_bounds[1]), (raw_bounds[2],raw_bounds[3])
 
-        if unit=='pixel':
-            raw_bounds = tuple(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), raw_bounds)))
-        elif unit=='latlng':
+        if unit[0]==unit[1]:
             pass
+        elif unit[0]=='latlng' and unit[1]=='pixel':
+            raw_bounds = tuple(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), raw_bounds)))
+        elif unit[0]=='pixel' and unit[1]=='latlng':
+            raw_bounds = tuple(list(map(functools.partial(self.pixel_to_latlng, zoom=zoom), raw_bounds)))
         else:
-            raise ValueError('unit is "pixel" or "latlng" of [x, y]')
+            raise ValueError('unit is "pixel" or "latlng" of 2 pieces list ex, ["latlng","pixel"]')
 
         x_min = raw_bounds[0][0]
         y_min = raw_bounds[0][1]
@@ -245,23 +247,40 @@ class LinkingPolylineImage:
     def rotation_axis_matrix_2d(theta):
         return np.array([[np.cos(theta), np.sin(theta)],[-np.sin(theta), np.cos(theta)]])
     
-    def terminal_node_aligned(self, polyline='self', minimum=[], minimum_unit='latlng', zoom=18):
+    def terminal_node_aligned(self, polyline, minimum=[], unit=['latlng','pixel'], zoom=18):
         """function to Minimum Bounding Rectangle aligned vector start to end.
         polyline (shapely.geometry.LineString) : LineString object. If default, use class instance.
         minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
         If width < minimum, width=minimum and Rectangle is helf width from center point.
         
+        unit (str) ['latlng', 'pixel'] : specify minimum unit.'latlng' is latitude and longitude. 
+        If unit is pixel, return unit is pixel and minimum unit is pixel, 
+        else if unit is latlng, return unit is longtude and latitude, and minimum unit is longtude and latitude.
+        
+        Finaly, the unit of minimum and return should be unified.
+        Warning, If unit is "latlng", later convert "latlng" to "pixel", point of rectangle is a little shift, no more parallelograms.
+        
         returns : [theta, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
         Theta is angle[rad] vector start to end from x axis.
         """
-        if polyline=='self' and hasattr(self, 'polyline'):
-            polyline = self.polyline
-        elif polyline=='self' and not hasattr(self, 'polyline'):
-            raise KeyError('polyline is not found. Please input polyline or in class instance')
+        #if polyline=='self' and hasattr(self, 'polyline'):
+        #    polyline = self.polyline
+        #elif polyline=='self' and not hasattr(self, 'polyline'):
+        #    raise KeyError('polyline is not found. Please input polyline or in class instance')
         
         if isinstance(polyline, str):
             polyline = shapely.wkt.loads(polyline)
+            
         coords = np.array(polyline.coords)  # all LineString coordinate.
+
+        if unit[0]==unit[1]:
+            pass
+        elif unit[0]=='latlng' and unit[1]=='pixel':
+            coords = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), coords)))
+        elif unit[0]=='pixel' and unit[1]=='latlng':
+            coords = np.array(list(map(functools.partial(self.pixel_to_latlng, zoom=zoom), coords)))
+        else:
+            raise ValueError('unit is "pixel" or "latlng" of 2 pieces list ex, ["latlng","pixel"]')
 
         start_coord = coords[0]
         end_coord = coords[-1]
@@ -269,20 +288,23 @@ class LinkingPolylineImage:
         vec_se = np.array([ end_coord[0]-start_coord[0], end_coord[1]-start_coord[1] ])
         # theta from x axis [rad]
         theta = np.arctan2( vec_se[1], vec_se[0] )
-        
+
         rotation_axis_matrix = self.rotation_axis_matrix_2d(theta)
+
         # Coordinate transformation using rotation.
         coords_trans = np.dot(rotation_axis_matrix, coords.T).T
 
+
         # get_bounds
         bounds_trans = self.xy_aligned( LineString(coords_trans),form='rectangle', \
-                minimum=minimum, minimum_unit=minimum_unit, zoom=zoom)
+                minimum=minimum, unit=['same','same'], zoom=zoom)
         # reverse coordinate transformation
         rotation_axis_matrix_rev = self.rotation_axis_matrix_2d(-theta)
         bounds_ = np.dot(rotation_axis_matrix_rev, bounds_trans[1].T).T
         bounds = [theta, bounds_]
         
         return bounds
+    
     
     @staticmethod
     def inpolygon(point, polygon):
