@@ -55,8 +55,6 @@ Polygon(bounds2[1])
 #%%
 bounds3 = lpi.xy_aligned(polyline=ls1,unit=['latlng','latlng'], form='minmax')
 
-#%%
-bounds3
 
 #%%
 

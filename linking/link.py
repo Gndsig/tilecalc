@@ -230,29 +230,30 @@ class LinkingPolylineImage:
     
     # ------------- Calculation Minimum Bounding Rectangle aligned xy axis ----------------
     
-    def xy_aligned(self, polyline, form='rectangle', minimum=[], unit=['latlng','pixel'], zoom=18):
+    def xy_aligned(self, polyline, minimum=[], buff=[], unit=['latlng','pixel'], form='rectangle', zoom=18):
         """function to Minimum Bounding Rectangle aligned xy axis.
         polyline (shapely.geometry.LineString) : LineString object. If default, use class instance.
         
-        form (str)['minmax', 'rectangle'] : If 'minmax', return np.array([[x_min, y_min], [x_max, y_max]]).
         If 'rectangle', return [theta(=0), np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
         Theta is angle[rad] from x axis, this case is 0.
         
-        zoom and minimum_unit is using only mimimum!=[]
+        minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle. Unit follows output unit.
+        buff (list of [x_min, y_min]) : A rectangle buffer. Unit follows output unit.
         
-        minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
         unit (list of str) [['latlng', 'pixel'], ['pixel', 'pixel'] ] : The first in the list shows the unit of input.
         THe second in the list shows the unit of output.
-        And minimum unit follows the second in the list.
+        And minimum unit and buff unit follows the second in the list.
         If unit is ['latlng','pixel'], the inputed polyline unit is longtude and latitude, and return unit is pixel and minimum unit is pixel, 
         else if unit is latlng, return unit is longtude and latitude, and minimum unit is longtude and latitude.
+        
+                form (str)['minmax', 'rectangle'] : If 'minmax', return np.array([[x_min, y_min], [x_max, y_max]]).
         
         Finaly, the unit of minimum and return should be unified.
         Warning, If unit is "latlng", later convert "latlng" to "pixel", point of rectangle is a little shift, no more parallelograms.
         
         If width < minimum, width=minimum and Rectangle is helf width from center point.
         """
-    
+
         #if polyline=='self' and hasattr(self, 'polyline'):
         #    polyline = self.polyline
         #elif polyline=='self' and not hasattr(self, 'polyline'):
@@ -260,11 +261,21 @@ class LinkingPolylineImage:
 
         if isinstance(polyline, str):
             polyline = shapely.wkt.loads(polyline)
-        
+
+
         raw_bounds = polyline.bounds  # (x_min, y_min, xmax, y_max)
         raw_bounds = (raw_bounds[0], raw_bounds[1]), (raw_bounds[2],raw_bounds[3])
 
         raw_bounds = self.unit_change(raw_bounds, unit=unit,zoom=zoom, is_round=False)
+
+        #if unit[0]==unit[1]:
+        #    pass
+        #elif unit[0]=='latlng' and unit[1]=='pixel':
+        #    raw_bounds = tuple(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), raw_bounds)))
+        #elif unit[0]=='pixel' and unit[1]=='latlng':
+        #    raw_bounds = tuple(list(map(functools.partial(self.pixel_to_latlng, zoom=zoom), raw_bounds)))
+        #else:
+        #    raise ValueError('unit is "pixel" or "latlng" of 2 pieces list ex, ["latlng","pixel"]')
 
         x_min = raw_bounds[0][0]
         y_min = raw_bounds[0][1]
@@ -289,6 +300,13 @@ class LinkingPolylineImage:
             y_min = center_point[1]-width[1]/2.0
             x_max = center_point[0]+width[0]/2.0
             y_max = center_point[1]+width[1]/2.0
+            
+        if not(buff==() or buff==[] or buff==None):  
+            x_min = x_min - buff[0]
+            y_min = y_min - buff[1]
+            x_max = x_max + buff[0]
+            y_max = y_max + buff[1]
+            
         bounds = np.array([[x_min, y_min], [x_max, y_max]])
 
         if form=='rectangle':
@@ -297,18 +315,20 @@ class LinkingPolylineImage:
             bounds = [0, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
 
         return bounds
-    
+        
     @staticmethod
     def rotation_axis_matrix_2d(theta):
         return np.array([[np.cos(theta), np.sin(theta)],[-np.sin(theta), np.cos(theta)]])
     
-    def terminal_node_aligned(self, polyline, minimum=[], unit=['latlng','pixel'], zoom=18):
+    def terminal_node_aligned(self, polyline, minimum=[], buff=[], unit=['latlng','pixel'], zoom=18):
         """function to Minimum Bounding Rectangle aligned vector start to end.
         polyline (shapely.geometry.LineString) : LineString object. If default, use class instance.
         minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
         If width < minimum, width=minimum and Rectangle is helf width from center point.
         
         minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
+        buff (list of [x_min, y_min]) : A rectangle buffer. Unit follows output unit.
+
         unit (list of str) [['latlng', 'pixel'], ['pixel', 'pixel'] ] : The first in the list shows the unit of input.
         THe second in the list shows the unit of output.
         And minimum unit follows the second in the list.
@@ -347,8 +367,8 @@ class LinkingPolylineImage:
 
 
         # get_bounds
-        bounds_trans = self.xy_aligned( LineString(coords_trans),form='rectangle', \
-                minimum=minimum, unit=['same','same'], zoom=zoom)
+        bounds_trans = self.xy_aligned( LineString(coords_trans), minimum=minimum,\
+                buff=buff, unit=['same','same'],form='rectangle', zoom=zoom)
         # reverse coordinate transformation
         rotation_axis_matrix_rev = self.rotation_axis_matrix_2d(-theta)
         bounds_ = np.dot(rotation_axis_matrix_rev, bounds_trans[1].T).T

@@ -1,6 +1,7 @@
 # using masic command #%% as vscode like jupyter.
 
 # 長方形をpixelの方で作るためのデバッグ
+# 長方形でバッファを作る機能を追加
 
 #%%
 import os
@@ -28,6 +29,8 @@ polyline=ls1
 form='rectangle'
 minimum=[]
 #minimum = [10,10]
+buff = [10,10]
+#buff = []
 unit=['latlng', 'pixel']
 zoom=18
 
@@ -38,12 +41,12 @@ a=  """function to Minimum Bounding Rectangle aligned xy axis.
     If 'rectangle', return [theta(=0), np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
     Theta is angle[rad] from x axis, this case is 0.
     
-    zoom and minimum_unit is using only mimimum!=[]
+    minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle. Unit follows output unit.
+    buff (list of [x_min, y_min]) : A rectangle buffer. Unit follows output unit.
     
-    minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
     unit (list of str) [['latlng', 'pixel'], ['pixel', 'pixel'] ] : The first in the list shows the unit of input.
     THe second in the list shows the unit of output.
-    And minimum unit follows the second in the list.
+    And minimum unit and buff unit follows the second in the list.
     If unit is ['latlng','pixel'], the inputed polyline unit is longtude and latitude, and return unit is pixel and minimum unit is pixel, 
     else if unit is latlng, return unit is longtude and latitude, and minimum unit is longtude and latitude.
     
@@ -99,6 +102,13 @@ if not(minimum==() or minimum==[] or minimum==None):
     y_min = center_point[1]-width[1]/2.0
     x_max = center_point[0]+width[0]/2.0
     y_max = center_point[1]+width[1]/2.0
+    
+if not(buff==() or buff==[] or buff==None):  
+    x_min = x_min - buff[0]
+    y_min = y_min - buff[1]
+    x_max = x_max + buff[0]
+    y_max = y_max + buff[1]
+     
 bounds = np.array([[x_min, y_min], [x_max, y_max]])
 
 if form=='rectangle':
@@ -106,6 +116,8 @@ if form=='rectangle':
     # [theta from x axis, np.array([4 points of spuare])]
     bounds = [0, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
 
+#%%
+bounds
 
 #%%
 Polygon(bounds[1])
@@ -122,13 +134,17 @@ Polygon(bounds[1])
 self=LinkingPolylineImage(ls1)
 polyline = ls1
 minimum=[]
+buff=[20,20]
 unit=['latlng','pixel']
 zoom=18
 
 a="""function to Minimum Bounding Rectangle aligned vector start to end.
     polyline (shapely.geometry.LineString) : LineString object. If default, use class instance.
+    
     minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
     If width < minimum, width=minimum and Rectangle is helf width from center point.
+    buff (list of [x_min, y_min]) : A rectangle buffer. Unit follows output unit.
+
     
     unit (str) ['latlng', 'pixel'] : specify minimum unit.'latlng' is latitude and longitude. 
     If unit is pixel, return unit is pixel and minimum unit is pixel, 
@@ -167,7 +183,7 @@ coords_trans = np.dot(rotation_axis_matrix, coords.T).T
 
 # get_bounds
 bounds_trans = self.xy_aligned( LineString(coords_trans),form='rectangle', \
-        minimum=minimum, unit=['same','same'], zoom=zoom)
+        minimum=minimum, buff=buff, unit=['same','same'], zoom=zoom)
 # reverse coordinate transformation
 rotation_axis_matrix_rev = self.rotation_axis_matrix_2d(-theta)
 bounds_ = np.dot(rotation_axis_matrix_rev, bounds_trans[1].T).T
