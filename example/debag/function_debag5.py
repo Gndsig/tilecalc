@@ -10,35 +10,16 @@ os.chdir("/workdir/linking_polyline_image/linking/")
 
 from link import *
 
-#%%
+
 ls1 = 'LINESTRING(139.07650102539062 35.99722956359412, 139.0784208984375 35.995022880246021, 139.0814208984375 35.994022880246021)'
 ls2 = LineString([(139.07585444335938, 35.9923409624497), (139.07730102539062, 35.99356320664446),(139.07867431640625,35.99722880246021),(139.0824208984375,35.99842880246021)])
 
 
-#%%
-# sample
-ls1_ = shapely.wkt.loads(ls1)
-print(ls1_.area)
-print(ls1_.bounds)
-print(ls1_.length)
-print(ls1_.geom_type)
-print(list(ls1_.coords))
-ls1_
-
-#%%
-# sample
-print(ls2.area)
-print(ls2.bounds)
-print(ls2.length)
-print(ls2.geom_type)
-print(list(ls2.coords))
-ls2
 
 #%%
 lpi = LinkingPolylineImage(ls1)
 bounds_ = lpi.xy_aligned(ls1)
 bounds_
-
 
 #%%
 #xy_aligned
@@ -50,7 +31,6 @@ minimum=[]
 unit=['latlng', 'pixel']
 zoom=18
 
-#%%
 a=  """function to Minimum Bounding Rectangle aligned xy axis.
     polyline (shapely.geometry.LineString) : LineString object. If default, use class instance.
     
@@ -85,18 +65,17 @@ if isinstance(polyline, str):
 raw_bounds = polyline.bounds  # (x_min, y_min, xmax, y_max)
 raw_bounds = (raw_bounds[0], raw_bounds[1]), (raw_bounds[2],raw_bounds[3])
 
+raw_bounds = self.unit_change(raw_bounds, unit=unit,zoom=zoom, is_round=False)
 
-#%%
-if unit[0]==unit[1]:
-    pass
-elif unit[0]=='latlng' and unit[1]=='pixel':
-    raw_bounds = tuple(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), raw_bounds)))
-elif unit[0]=='pixel' and unit[1]=='latlng':
-    raw_bounds = tuple(list(map(functools.partial(self.pixel_to_latlng, zoom=zoom), raw_bounds)))
-else:
-    raise ValueError('unit is "pixel" or "latlng" of 2 pieces list ex, ["latlng","pixel"]')
+#if unit[0]==unit[1]:
+#    pass
+#elif unit[0]=='latlng' and unit[1]=='pixel':
+#    raw_bounds = tuple(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), raw_bounds)))
+#elif unit[0]=='pixel' and unit[1]=='latlng':
+#    raw_bounds = tuple(list(map(functools.partial(self.pixel_to_latlng, zoom=zoom), raw_bounds)))
+#else:
+#    raise ValueError('unit is "pixel" or "latlng" of 2 pieces list ex, ["latlng","pixel"]')
 
-#%%
 x_min = raw_bounds[0][0]
 y_min = raw_bounds[0][1]
 x_max = raw_bounds[1][0]
@@ -143,7 +122,7 @@ Polygon(bounds[1])
 self=LinkingPolylineImage(ls1)
 polyline = ls1
 minimum=[]
-unit=['latlng','latlng']
+unit=['latlng','pixel']
 zoom=18
 
 a="""function to Minimum Bounding Rectangle aligned vector start to end.
@@ -171,18 +150,7 @@ if isinstance(polyline, str):
     polyline = shapely.wkt.loads(polyline)
 coords = np.array(polyline.coords)  # all LineString coordinate.
 
-#%%
-if unit[0]==unit[1]:
-    pass
-elif unit[0]=='latlng' and unit[1]=='pixel':
-    coords = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), coords)))
-elif unit[0]=='pixel' and unit[1]=='latlng':
-    coords = np.array(list(map(functools.partial(self.pixel_to_latlng, zoom=zoom), coords)))
-else:
-    raise ValueError('unit is "pixel" or "latlng" of 2 pieces list ex, ["latlng","pixel"]')
-
-
-#%%
+coords = np.array(self.unit_change(coords, unit=unit,zoom=zoom, is_round=False))
 
 start_coord = coords[0]
 end_coord = coords[-1]
@@ -231,10 +199,155 @@ Polygon(bounds1[1])
 #%%
 Polygon(bounds2[1])
 
+
+#%%
+
+# check_latlng
+self=LinkingPolylineImage()
+coordinate = bounds3
+
+a="""
+coordinate (tuple or list of np.array of float) : coordinate. xy order. For example, (140.087099, 36.104665) 
+
+return : if coordinate is longtude and latitude, return True. Else if, coordinate is pixle return False 
+"""
+
+np_shape = np.array(coordinate).shape
+np_shape_rear = np.array(coordinate[1]).shape
+
+
+def check_unit(coordinate):
+    # check coordinate is longtude and latitude
+    if all([-180 <= coord and coord <= 180 for coord in coordinate]):
+        return True
+    else:
+        return False
+
+if len(np_shape)==2:
+    # if coordinate is multiple coordinates ex. [[2,2],[2,2]]
+
+    is_latlngs = list(map(check_unit, coordinate))
+    is_latlng = all(is_latlngs)
+
+else:
+    if len(np_shape_rear)==0:
+        # if coordinate is single coordinate ex. [1,1]
+        is_latlng = check_unit(coordinate)
+        
+    elif len(np_shape_rear)==2:
+        # if coordinate is bounds ex. [0, np.array([[1,1],[2,2]]) ]
+        print('This instance is bounds ex. [ theta, np.array([[1,1],[2,2]])]')
+        is_latlngs = list(map(check_unit, coordinate[1]))
+        is_latlng = all(is_latlngs)
+    else:
+        # other
+        raise ValueError('Input must be coordinate ex. [1,1] or [[2,2],[2,2]] [0, np.array([[2,2],[2,2]])],')
+
+is_latlng
+
+
 #%%
 # return xy tile coordinate array.
-pickup_tiles_ = lpi.overlappingTiles(bounds1, zoom=zoom)
-pickup_tiles_
+#pickup_tiles_ = lpi.overlappingTiles(bounds1, zoom=zoom)
+#pickup_tiles_
+
+
+#%%
+bounds3 = lpi.xy_aligned(polyline=ls1,unit=['latlng','latlng'], form='minmax')
+
+#%%
+
+# overLappingTiles
+self=LinkingPolylineImage(ls1)
+bounds=bounds1
+unit = ['pixel', 'pixel']
+zoom='self'
+TILE_SIZE='self'
+a="""
+bounds (list) : input [theta, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]])] by xy_aligned or terminal node aligned.
+zoom (int)[0-18] : zoom level.
+filepath (str of False) : tiles database path. If path is --/--/--/zoom/x/y, the part is --/--/--/.
+Don't need it, if not False, check whether file exists.
+file_extention (str) : If use filepath, specify file extention.
+
+returns : If filepath=False, return pickup_tiles as np.array([[x1, y1], [x2, y2],...])
+elif filepash='path', return filepath list as ['filepath/zoom/x1/y1',...]
+"""
+
+if TILE_SIZE=='self' and hasattr(self, 'TILE_SIZE'):
+    TILE_SIZE = self.TILE_SIZE
+elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
+    raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
+
+if zoom=='self' and hasattr(self, 'zoom'):
+    zoom = self.zoom
+elif zoom=='self' and not hasattr(self, 'zoom'):
+    raise KeyError('zoom is not found. Please input zoom or in class instance')
+
+
+if len(bounds)==4:  # if bounds=(x_min,ymin,x_max,y_max)
+    bounds = [0, np.array([[bounds[0],bounds[1]],[bounds[2],bounds[1]],[bounds[2],bounds[3]],[bounds[0], bounds[3]]]) ]
+
+theta = bounds[0]
+
+#%%
+pixel_bounds = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), bounds[1])))
+
+
+#%%
+points, len_points, tiles, len_tiles = self._make_tile_mesh(pixel_bounds, TILE_SIZE, is_lines=False)
+
+
+# judgement points are whether in bounds.
+points_is_in_bounds = np.array(list(map(functools.partial(self.inpolygon, polygon=pixel_bounds), points)))
+
+# tiles have how many points in bounds.
+howmany_points_in_bounds = []
+howmany_points_in_bounds_append = howmany_points_in_bounds.append
+for i in range(len_tiles):
+    howmuch_in_bounds = points_is_in_bounds[tiles[i]].sum()
+    howmany_points_in_bounds_append(howmuch_in_bounds)
+
+# pick up tiles having at least 1 points in bounds.
+is_in_bounds = [hpib !=0 for hpib in howmany_points_in_bounds]
+
+
+# ---------Tile having bounds corner contains, because the case is exists that 
+# tile all points is not in bounds, but bounds corner points is in the tile.--------
+
+# tile_base_point
+tile_base_points = []
+tile_base_points_append = tile_base_points.append
+for tile_num in range(len_tiles):
+    tile_base_points_append(points[tiles[tile_num][0]])
+tile_base_points = np.array(tile_base_points)
+
+# Calculate which position of which tile is relative to the 4 points of Bounds.
+len_pixel_bounds = len(pixel_bounds)
+
+bounds_corner_tiles_index = []
+for i in range(len_pixel_bounds):  # i=0,1,2,3 if rectangle
+    corner_jugdment = -(tile_base_points - pixel_bounds[i])
+    tile_corner_index = np.where(np.all((0.0 <= corner_jugdment) * (corner_jugdment[:,[0]] < TILE_SIZE[0]) * (corner_jugdment[:,[1]] < TILE_SIZE[1]), axis=1) )
+    bounds_corner_tiles_index.append(tile_corner_index)
+    
+bounds_corner_tiles_index = np.array(bounds_corner_tiles_index).reshape(-1,)
+
+for index in bounds_corner_tiles_index:
+    is_in_bounds[index] = True  
+# -------------------------------------------------------
+
+pickup_tiles = points[tiles[is_in_bounds,0]] / TILE_SIZE
+pickup_tiles = pickup_tiles.astype(int)
+
+return pickup_tiles
+
+
+
+
+#%%
+
+
 
 # %%
 # return xy tile coordinate array and where intersection is in tile.

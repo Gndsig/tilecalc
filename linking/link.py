@@ -36,9 +36,43 @@ class LinkingPolylineImage:
         self.TILE_SIZE=tile_size
         
         # convert polyline unit latitude and longitude to pixel
-        
-    
+
     # ------------- convert latitude and longitude to XYZtile or vice versa ----------------
+    def check_unit(self, coordinate):
+        """
+        coordinate (tuple or list of np.array of float) : coordinate. xy order. For example, (140.087099, 36.104665) 
+
+        return (bool): if coordinate is longtude and latitude, return True. Else if, coordinate is pixle return False 
+        """
+    
+        np_shape = np.array(coordinate).shape
+        np_shape_rear = np.array(coordinate[1]).shape
+
+        def check_latlng(coordinate):
+            # check coordinate is longtude and latitude
+            if all([-180 <= coord and coord <= 180 for coord in coordinate]):
+                return True
+            else:
+                return False
+
+        if len(np_shape)==2:
+            # if coordinate is multiple coordinates ex. [[2,2],[2,2]]
+            is_latlngs = list(map(check_latlng, coordinate))
+            is_latlng = all(is_latlngs)
+        else:
+            if len(np_shape_rear)==0:
+                # if coordinate is single coordinate ex. [1,1]
+                is_latlng = check_latlng(coordinate)              
+            elif len(np_shape_rear)==2:
+                # if coordinate is bounds ex. [0, np.array([[1,1],[2,2]]) ]
+                print('This instance is bounds ex. [ theta, np.array([[1,1],[2,2]])]')
+                is_latlngs = list(map(check_latlng, coordinate[1]))
+                is_latlng = all(is_latlngs)
+            else:
+                # other
+                raise ValueError('Input must be coordinate ex. [1,1] or [[2,2],[2,2]] [0, np.array([[2,2],[2,2]])],')
+
+        return is_latlng
 
     def latlng_to_pixel(self,coordinate, zoom=18, is_round=False):
         """latitude and longitude convert to pixel coordinate
@@ -49,6 +83,10 @@ class LinkingPolylineImage:
         
         returns : (x_pixel, y_pixel)
         """
+        is_latlng = self.check_unit(coordinate)  # check coordinate is longtude and latitude
+        if not is_latlng:
+            raise ValueError('coordinate is not longtude and latitude')
+        
         latitude = coordinate[0]
         longtitude = coordinate[1]
         x_pixel = 2**(zoom+7)*(latitude/180 + 1)
@@ -69,7 +107,7 @@ class LinkingPolylineImage:
         
         returns : (x_tile, y_tile)
         if is_remainder : (x_tile, y_tile, x_in_tile, y_in_tile)
-        """
+        """        
         if TILE_SIZE=='self' and hasattr(self, 'TILE_SIZE'):
             TILE_SIZE = self.TILE_SIZE
         elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
@@ -109,6 +147,10 @@ class LinkingPolylineImage:
 
         returns : (longitude, latitude)
         """
+        is_latlng = self.check_unit(coordinate)  # check coordinate is longtude and latitude
+        if is_latlng:
+            raise ValueError('coordinate is not pixel')
+        
         x_pixel = pixel_coordinate[0]
         y_pixel = pixel_coordinate[1]
         L=85.05112878
@@ -166,6 +208,26 @@ class LinkingPolylineImage:
         
         return tile_coordinate
     
+    
+    def unit_change(self, coords, unit, zoom=18, is_round=False):
+        """
+        Followed unit, coords unit changes longtude and latitude to pixel or pixel to langtude and latitude.
+        unit (list of str) ex.['latlng','pixel'] : input unit is 0th in list, output unit is 1th in list.
+        coords (list or np.array) : coordinate. ex. np.array([[1,1], [2,2]]) 
+        return : Coords changed unit.
+        """
+    
+        if unit[0]==unit[1]:
+            pass
+        elif unit[0]=='latlng' and unit[1]=='pixel':
+            coords = tuple(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), coords)))
+        elif unit[0]=='pixel' and unit[1]=='latlng':
+            coords = tuple(list(map(functools.partial(self.pixel_to_latlng, zoom=zoom), coords)))
+        else:
+            raise ValueError('unit is "pixel" or "latlng" of 2 pieces list ex, ["latlng","pixel"]')
+            
+        return coords
+    
     # ------------- Calculation Minimum Bounding Rectangle aligned xy axis ----------------
     
     def xy_aligned(self, polyline, form='rectangle', minimum=[], unit=['latlng','pixel'], zoom=18):
@@ -190,7 +252,7 @@ class LinkingPolylineImage:
         
         If width < minimum, width=minimum and Rectangle is helf width from center point.
         """
-
+    
         #if polyline=='self' and hasattr(self, 'polyline'):
         #    polyline = self.polyline
         #elif polyline=='self' and not hasattr(self, 'polyline'):
@@ -202,14 +264,7 @@ class LinkingPolylineImage:
         raw_bounds = polyline.bounds  # (x_min, y_min, xmax, y_max)
         raw_bounds = (raw_bounds[0], raw_bounds[1]), (raw_bounds[2],raw_bounds[3])
 
-        if unit[0]==unit[1]:
-            pass
-        elif unit[0]=='latlng' and unit[1]=='pixel':
-            raw_bounds = tuple(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), raw_bounds)))
-        elif unit[0]=='pixel' and unit[1]=='latlng':
-            raw_bounds = tuple(list(map(functools.partial(self.pixel_to_latlng, zoom=zoom), raw_bounds)))
-        else:
-            raise ValueError('unit is "pixel" or "latlng" of 2 pieces list ex, ["latlng","pixel"]')
+        raw_bounds = self.unit_change(raw_bounds, unit=unit,zoom=zoom, is_round=False)
 
         x_min = raw_bounds[0][0]
         y_min = raw_bounds[0][1]
@@ -253,8 +308,11 @@ class LinkingPolylineImage:
         minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
         If width < minimum, width=minimum and Rectangle is helf width from center point.
         
-        unit (str) ['latlng', 'pixel'] : specify minimum unit.'latlng' is latitude and longitude. 
-        If unit is pixel, return unit is pixel and minimum unit is pixel, 
+        minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle.
+        unit (list of str) [['latlng', 'pixel'], ['pixel', 'pixel'] ] : The first in the list shows the unit of input.
+        THe second in the list shows the unit of output.
+        And minimum unit follows the second in the list.
+        If unit is ['latlng','pixel'], the inputed polyline unit is longtude and latitude, and return unit is pixel and minimum unit is pixel, 
         else if unit is latlng, return unit is longtude and latitude, and minimum unit is longtude and latitude.
         
         Finaly, the unit of minimum and return should be unified.
@@ -273,14 +331,7 @@ class LinkingPolylineImage:
             
         coords = np.array(polyline.coords)  # all LineString coordinate.
 
-        if unit[0]==unit[1]:
-            pass
-        elif unit[0]=='latlng' and unit[1]=='pixel':
-            coords = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), coords)))
-        elif unit[0]=='pixel' and unit[1]=='latlng':
-            coords = np.array(list(map(functools.partial(self.pixel_to_latlng, zoom=zoom), coords)))
-        else:
-            raise ValueError('unit is "pixel" or "latlng" of 2 pieces list ex, ["latlng","pixel"]')
+        coords = np.array(self.unit_change(coords, unit=unit,zoom=zoom, is_round=False))
 
         start_coord = coords[0]
         end_coord = coords[-1]
@@ -370,7 +421,7 @@ class LinkingPolylineImage:
     def _make_tile_mesh(self, pixel_bounds, TILE_SIZE, is_lines=False):
 
         # for make searching point, Make roughly tile points
-        bounds_bounds = self.xy_aligned(Polygon(pixel_bounds), form='minmax')
+        bounds_bounds = self.xy_aligned(Polygon(pixel_bounds), unit=['pixel','pixel'], form='minmax')
         min_x_s = (bounds_bounds[0,0] - TILE_SIZE[0]) // TILE_SIZE[0] * TILE_SIZE[0]
         min_y_s = (bounds_bounds[0,1] - TILE_SIZE[1]) // TILE_SIZE[1] * TILE_SIZE[1]
         max_x_s = (bounds_bounds[1,0] + TILE_SIZE[0]) // TILE_SIZE[0] * TILE_SIZE[0]
@@ -447,23 +498,25 @@ class LinkingPolylineImage:
             return points, len_points, tiles, len_tiles
         
         
-    def overlappingTiles(self, bounds, zoom='self', TILE_SIZE='self'):
+    def overlappingTiles(self, bounds, unit=['pixel','pixel'], zoom='self', TILE_SIZE='self'):
         """
         bounds (list) : input [theta, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]])] by xy_aligned or terminal node aligned.
         zoom (int)[0-18] : zoom level.
-        filepath (str of False) : tiles database path. If path is --/--/--/zoom/x/y, the part is --/--/--/.
-        Don't need it, if not False, check whether file exists.
-        file_extention (str) : If use filepath, specify file extention.
         
-        returns : If filepath=False, return pickup_tiles as np.array([[x1, y1], [x2, y2],...])
-        elif filepash='path', return filepath list as ['filepath/zoom/x1/y1',...]
+        unit (list of str) [['latlng', 'pixel'], ['pixel', 'pixel'] ] : The first in the list shows the unit of input.
+        THe second in the list shows the unit of output.
+        And minimum unit follows the second in the list.
+        If unit is ['latlng','pixel'], the inputed polyline unit is longtude and latitude, and return unit is pixel and minimum unit is pixel, 
+        else if unit is latlng, return unit is longtude and latitude, and minimum unit is longtude and latitude.
+
+        returns : return pickup_tiles as np.array([[x1, y1], [x2, y2],...])
         """
-        
+
         if TILE_SIZE=='self' and hasattr(self, 'TILE_SIZE'):
             TILE_SIZE = self.TILE_SIZE
         elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
             raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
-        
+
         if zoom=='self' and hasattr(self, 'zoom'):
             zoom = self.zoom
         elif zoom=='self' and not hasattr(self, 'zoom'):
@@ -474,15 +527,14 @@ class LinkingPolylineImage:
             bounds = [0, np.array([[bounds[0],bounds[1]],[bounds[2],bounds[1]],[bounds[2],bounds[3]],[bounds[0], bounds[3]]]) ]
 
         theta = bounds[0]
-        # warning :: pixel coordinate is y axis inversion.
-        pixel_bounds = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), bounds[1])))
 
+        # probably, bounds is pixel, from here bounds must be pixel unit.
+        bounds_pixel = np.array(self.unit_change(bounds[1], unit=unit,zoom=zoom, is_round=False))
 
-        points, len_points, tiles, len_tiles = self._make_tile_mesh(pixel_bounds, TILE_SIZE, is_lines=False)
-
+        points, len_points, tiles, len_tiles = self._make_tile_mesh(bounds_pixel, TILE_SIZE, is_lines=False)
 
         # judgement points are whether in bounds.
-        points_is_in_bounds = np.array(list(map(functools.partial(self.inpolygon, polygon=pixel_bounds), points)))
+        points_is_in_bounds = np.array(list(map(functools.partial(self.inpolygon, polygon=bounds_pixel), points)))
 
         # tiles have how many points in bounds.
         howmany_points_in_bounds = []
@@ -506,16 +558,16 @@ class LinkingPolylineImage:
         tile_base_points = np.array(tile_base_points)
 
         # Calculate which position of which tile is relative to the 4 points of Bounds.
-        len_pixel_bounds = len(pixel_bounds)
+        len_bounds_pixel = len(bounds_pixel)
 
         bounds_corner_tiles_index = []
-        for i in range(len_pixel_bounds):  # i=0,1,2,3 if rectangle
-            corner_jugdment = -(tile_base_points - pixel_bounds[i])
+        for i in range(len_bounds_pixel):  # i=0,1,2,3 if rectangle
+            corner_jugdment = -(tile_base_points - bounds_pixel[i])
             tile_corner_index = np.where(np.all((0.0 <= corner_jugdment) * (corner_jugdment[:,[0]] < TILE_SIZE[0]) * (corner_jugdment[:,[1]] < TILE_SIZE[1]), axis=1) )
             bounds_corner_tiles_index.append(tile_corner_index)
             
         bounds_corner_tiles_index = np.array(bounds_corner_tiles_index).reshape(-1,)
-        
+
         for index in bounds_corner_tiles_index:
             is_in_bounds[index] = True  
         # -------------------------------------------------------
@@ -529,19 +581,18 @@ class LinkingPolylineImage:
         """
         bounds (list) : input [theta, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]])] by xy_aligned or terminal node aligned.
         zoom (int)[0-18] : zoom level.
-        
+
         returns : If filepath=False, return pickup_tiles, pickup_tiles_intersection as np.array([[x1, y1], [x2, y2],...]), 
         np.array([[x11,y11],[x12,y12],[x13,y13]], ...). x11, y11 and x12, y12 is intersections of bounds lines and tiles lines.
         x13, y13 is bounds corner points in the tiles. If intersections or corner points are not exist, it is in np.nan.
         elif filepath='anypath', return pickup_tiles, pickup_tiles_intersection, pickup_tiles_list. pickup_tile_list as ['filepath/zoom/x1/y1',...].
         """
         
-
         if TILE_SIZE=='self' and hasattr(self, 'TILE_SIZE'):
             TILE_SIZE = self.TILE_SIZE
         elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
             raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
-        
+
         if zoom=='self' and hasattr(self, 'zoom'):
             zoom = self.zoom
         elif zoom=='self' and not hasattr(self, 'zoom'):
@@ -551,15 +602,16 @@ class LinkingPolylineImage:
             bounds = [0, np.array([[bounds[0],bounds[1]],[bounds[2],bounds[1]],[bounds[2],bounds[3]],[bounds[0], bounds[3]]]) ]
 
         theta = bounds[0]
+
         # warning :: pixel coordinate is y axis inversion.
-        pixel_bounds = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), bounds[1])))
+        # probably, bounds is pixel, from here bounds must be pixel unit.
+        bounds_pixel = np.array(self.unit_change(bounds[1], unit=unit,zoom=zoom, is_round=False))
+
+        points, len_points, tiles, len_tiles, lines, len_lines, owner = self._make_tile_mesh(bounds_pixel, TILE_SIZE, is_lines=True)
 
 
-        points, len_points, tiles, len_tiles, lines, len_lines, owner = self._make_tile_mesh(pixel_bounds, TILE_SIZE, is_lines=True)
-
-        
         # judgement points are whether in bounds.
-        points_is_in_bounds = np.array(list(map(functools.partial(self.inpolygon, polygon=pixel_bounds), points)))
+        points_is_in_bounds = np.array(list(map(functools.partial(self.inpolygon, polygon=bounds_pixel), points)))
 
         # intersects with bounds when the end point of the line is True and False
         line_points_in_bounds = []
@@ -578,14 +630,14 @@ class LinkingPolylineImage:
         len_cross_lines_coords = len(cross_lines_coords)
 
         # pixel_bounds having 4 lines, its represent points.
-        len_pixel_bounds = len(pixel_bounds)
+        len_pixel_bounds = len(bounds_pixel)
         pb_lines_coords = []
         pb_lines_coords_append = pb_lines_coords.append
         for i in range(len_pixel_bounds):
             if i!=len_pixel_bounds-1:
-                pb_lines_coords_append([pixel_bounds[i],pixel_bounds[i+1]])
+                pb_lines_coords_append([bounds_pixel[i],bounds_pixel[i+1]])
             elif i==len_pixel_bounds-1:
-                pb_lines_coords_append([pixel_bounds[i],pixel_bounds[0]])
+                pb_lines_coords_append([bounds_pixel[i],bounds_pixel[0]])
 
         # judgment lines cross which bounds lines.
         which_lines_cross = []
@@ -649,7 +701,7 @@ class LinkingPolylineImage:
         bounds_corner_tiles_index = []
         bounds_corner_tile_coords = []
         for i in range(len_pixel_bounds):  # i=0,1,2,3 if rectangle
-            corner_jugdment = -(tile_base_points - pixel_bounds[i])
+            corner_jugdment = -(tile_base_points - bounds_pixel[i])
             tile_corner_index = np.where(np.all((0.0 <= corner_jugdment) * (corner_jugdment[:,[0]] < TILE_SIZE[0]) * (corner_jugdment[:,[1]] < TILE_SIZE[1]), axis=1) )
             bounds_corner_tiles_index.append(tile_corner_index)
             bounds_corner_tile_coords.append(corner_jugdment[tile_corner_index])
