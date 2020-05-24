@@ -6,6 +6,10 @@ import shapely.wkt
 import functools
 import glob
 
+import matplotlib.pyplot as plt
+import cv2
+from PIL import Image, ImageDraw
+
 
 class TileSegment:
     def __init__(self):
@@ -25,15 +29,18 @@ class TileSegment:
 class LinkingPolylineImage:
     
     # constructor for WKT
-    def __init__(self, zoom=18, tile_size=(256,256)):
+    def __init__(self, zoom=18, TILE_SIZE=(256,256)):
         """
         wkt_polyline (str or shapely.geometry.LineString) : WKT string or LineString object.
         For example, 'LINESTRING(139.07730102539062 36.00022956359412, 139.0814208984375 35.98022880246021)'
         ,or shapely.geometry.LineString([(139.07455444335938, 35.9913409624497), (139.07730102539062, 35.99356320664446)])
+        
+        zoom (int)[0-18] : zoom level.
+        TILE_SIZE (tuple of int) : The tile size(px). Probably, (256, 256).
         """
         
         self.zoom = zoom
-        self.TILE_SIZE=tile_size
+        self.TILE_SIZE=TILE_SIZE
         
         # convert polyline unit latitude and longitude to pixel
 
@@ -532,15 +539,15 @@ class LinkingPolylineImage:
         returns : return pickup_tiles as np.array([[x1, y1], [x2, y2],...])
         """
 
-        if TILE_SIZE=='self' and hasattr(self, 'TILE_SIZE'):
-            TILE_SIZE = self.TILE_SIZE
-        elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
-            raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
-
         if zoom=='self' and hasattr(self, 'zoom'):
             zoom = self.zoom
         elif zoom=='self' and not hasattr(self, 'zoom'):
             raise KeyError('zoom is not found. Please input zoom or in class instance')
+
+        if TILE_SIZE=='self' and hasattr(self, 'TILE_SIZE'):
+            TILE_SIZE = self.TILE_SIZE
+        elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
+            raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
 
 
         if len(bounds)==4:  # if bounds=(x_min,ymin,x_max,y_max)
@@ -602,21 +609,21 @@ class LinkingPolylineImage:
         bounds (list) : input [theta, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]])] by xy_aligned or terminal node aligned.
         zoom (int)[0-18] : zoom level.
 
-        returns : If filepath=False, return pickup_tiles, pickup_tiles_intersection as np.array([[x1, y1], [x2, y2],...]), 
+        returns : return pickup_tiles, pickup_tiles_intersection as np.array([[x1, y1], [x2, y2],...]), 
         np.array([[x11,y11],[x12,y12],[x13,y13]], ...). x11, y11 and x12, y12 is intersections of bounds lines and tiles lines.
         x13, y13 is bounds corner points in the tiles. If intersections or corner points are not exist, it is in np.nan.
-        elif filepath='anypath', return pickup_tiles, pickup_tiles_intersection, pickup_tiles_list. pickup_tile_list as ['filepath/zoom/x1/y1',...].
         """
+        
+        if zoom=='self' and hasattr(self, 'zoom'):
+            zoom = self.zoom
+        elif zoom=='self' and not hasattr(self, 'zoom'):
+            raise KeyError('zoom is not found. Please input zoom or in class instance')
         
         if TILE_SIZE=='self' and hasattr(self, 'TILE_SIZE'):
             TILE_SIZE = self.TILE_SIZE
         elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
             raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
 
-        if zoom=='self' and hasattr(self, 'zoom'):
-            zoom = self.zoom
-        elif zoom=='self' and not hasattr(self, 'zoom'):
-            raise KeyError('zoom is not found. Please input zoom or in class instance')
 
         if len(bounds)==4:  # if bounds=(x_min,ymin,x_max,y_max)
             bounds = [0, np.array([[bounds[0],bounds[1]],[bounds[2],bounds[1]],[bounds[2],bounds[3]],[bounds[0], bounds[3]]]) ]
@@ -765,20 +772,20 @@ class LinkingPolylineImage:
         return pickup_tiles, pickup_tiles_intersection
     
 
-    def _pickup_file_search(self, pickup_tiles, zoom, filepath, file_extention):
-        if not filepath[-1:]=='/':
-            filepath = filepath+'/'
-        filepath = filepath + str(zoom) + '/'
+    def _pickup_file_search(self, pickup_tiles, zoom, file_path, file_extention):
+        if not file_path[-1:]=='/':
+            file_path = file_path+'/'
+        file_path = file_path + str(zoom) + '/'
             
         pickup_tiles_list = []
         for pit in pickup_tiles:
             x = pit[0]
             y = pit[1]
-            path = filepath +str(x) + '/'+str(y) + file_extention
+            path = file_path +str(x) + '/'+str(y) + file_extention
             pickup_tiles_list.append(path)
             
         # all database tiles.
-        tilesfile_list = glob.glob(filepath+'*/*')
+        tilesfile_list = glob.glob(file_path+'*/*')
         isnot_exist_files = set(pickup_tiles_list) - set(tilesfile_list)
 
         # if pickup_file is not exist, raise error
@@ -786,12 +793,225 @@ class LinkingPolylineImage:
             raise ValueError(str(isnot_exist_files)+' is not exist')
         return pickup_tiles_list
     
+    # 黒下地に足していくのとくっつけるのが、うまく一つのライブラリで実現できずに、cv2とPillowを両方使ってしまった。
     
-    def concat_image(self,filepath=False, file_extention='.webp'):
+    def _concat_h_blank(self, im1, im2, color=(0,0,0)):
+        dst = Image.new('RGB', (im1.width + im2.width, max(im1.height, im2.height)), color)
+        dst.paste(im1, (0, 0))
+        dst.paste(im2, (im1.width, 0))
+        return dst
+
+    def _concat_v_blank(self, im1, im2, color=(0,0,0)):
+        dst = Image.new('RGB', (max(im1.width, im2.width), im1.height + im2.height), color)
+        dst.paste(im1, (0, 0))
+        dst.paste(im2, (0, im1.height))
+        return dst
+
+    def _concat_h_multi_blank(self, im_list, color=(0,0,0)):
+        _im = im_list.pop(0)
+        for im in im_list:
+            _im = self._concat_h_blank(_im, im, color)
+        return _im
+
+    def _concat_v_multi_blank(self, im_list, color=(0,0,0)):
+        _im = im_list.pop(0)
+        for im in im_list:
+            _im = self._concat_v_blank(_im, im, color)
+        return _im
+
+    def _concat_tile_blank(self, im_list_2d, color=(0,0,0)):
+        im_list_v = [self._concat_h_multi_blank(im_list_h, color) for im_list_h in im_list_2d]
+        return self._concat_v_multi_blank(im_list_v, color)
+
+    def _make_dummy(self, im, color=(0,0,0)):
+        dst = Image.new('RGB', (im.width, im.height), color)
+        return dst
+
+    def _pil2cv(self, image):
+        ''' PIL型 -> OpenCV型 '''
+        new_image = np.array(image, dtype=np.uint8)
+        if new_image.ndim == 2:  # モノクロ
+            pass
+        elif new_image.shape[2] == 3:  # カラー
+            new_image = cv2.cvtColor(new_image, cv2.COLOR_RGB2BGR)
+        elif new_image.shape[2] == 4:  # 透過
+            new_image = cv2.cvtColor(new_image, cv2.COLOR_RGBA2BGRA)
+        return new_image
+
+    def _cv2pil(self, image):
+        ''' OpenCV型 -> PIL型 '''
+        new_image = image.copy()
+        if new_image.ndim == 2:  # モノクロ
+            pass
+        elif new_image.shape[2] == 3:  # カラー
+            new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2RGB)
+        elif new_image.shape[2] == 4:  # 透過
+            new_image = cv2.cvtColor(new_image, cv2.COLOR_BGRA2RGBA)
+        new_image = Image.fromarray(new_image)
+        return new_image
+    
+    
+    def polygon_crop_cv(self, img, polygon, mode='all'):
         """
-        filepath (str of False) : tiles database path. If path is --/--/--/zoom/x/y, the part is --/--/--/.
-        Don't need it, if not False, check whether file exists.
-        file_extention (str) : If use filepath, specify file extention.
+        The function to crop.
+        mode (list of str) 'croped','mask','dst','dst2' : If 'all' 4 all pattern images return.
+        dst : black back crop, dst2 : white back crop.
         """
+        if mode=='all':
+            mode=['croped', 'mask', 'dst', 'dst2']
+        elif mode!='all' and isinstance(mode,str):
+            mode = [mode]
         
-        pickup_tiles_list = self._pickup_file_search(pickup_tiles, zoom, filepath, file_extention)
+        returns = []
+        rect = cv2.boundingRect(polygon)
+        x,y,w,h = rect
+        croped = img[y:y+h, x:x+w].copy()
+        if 'croped' in mode:
+            ## (1) Crop the bounding rect
+            returns.append(croped)
+        
+        polygon = polygon - polygon.min(axis=0)
+        mask = np.zeros(croped.shape[:2], np.uint8)  
+        if 'mask' in mode:
+            ## (2) make mask
+            cv2.drawContours(mask, [polygon], -1, (255, 255, 255), -1, cv2.LINE_AA)
+            returns.append(mask)
+        
+        if 'dst' in mode:
+            ## (3) do bit-op
+            dst = cv2.bitwise_and(croped, croped, mask=mask)
+            returns.append(dst)
+            
+        if 'dst2' in mode:
+            ## (4) add the white background
+            bg = np.ones_like(croped, np.uint8)*255
+            cv2.bitwise_not(bg,bg, mask=mask)
+            dst2 = bg+ dst
+            returns.append(dst2)
+        return returns
+
+
+    def draw_image_at_once(self, polyline, bounds, pickup_tiles, file_path, 
+                           file_extention='.webp', save_path='./',
+                           is_polyline=True, is_bounds=True, crop_mode='dst', zoom='self', TILE_SIZE='self'):
+        """
+        A function that collects tiles in bounds and connects the top of 
+        the satellite image with the polyline.
+        polyline (shapely.geometry.LineString) : polyline using make bounds.
+        bounds (list) : returns for xy_aligned or terminal_node_aligned.
+        pickup_tiles (list) : returns for overlappingTile function.
+        
+        file_path (str) : path for where there are satellite image tiles. ex. '../datasets/'
+        file_extention (str) : Extension for tile image files. Probably, '.webp'.
+        save_file_path (str) : path for save image file.
+        
+        is_polyline (bool) : If True, polyline is drawn.
+        is_bounds (bool) : If True, bounds is drawn.
+        crop_mode (list of str) 'croped','mask','dst','dst2' or False: If 'all' 4 all pattern images return.
+        dst, black back crop, dst2, white back crop.
+        if False, no croped.
+        
+        zoom (int)[0-18] : zoom level.
+        TILE_SIZE (tuple of int) : The tile size(px). Probably, (256, 256).
+        """
+        if zoom=='self' and hasattr(self, 'zoom'):
+            zoom = self.zoom
+        elif zoom=='self' and not hasattr(self, 'zoom'):
+            raise KeyError('zoom is not found. Please input zoom or in class instance')
+        
+        if TILE_SIZE=='self' and hasattr(self, 'TILE_SIZE'):
+            TILE_SIZE = self.TILE_SIZE
+        elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
+            raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
+
+        # the last of file_path '/' may or may not be.
+        pickup_tiles_list = self._pickup_file_search(pickup_tiles, zoom, file_path, file_extention)
+
+        # concat image
+        img_list = [Image.open(pickup_tile) for pickup_tile in pickup_tiles_list]
+        dummy = self._make_dummy(img_list[0])
+
+        min_x = pickup_tiles[:,0].min()
+        min_y = pickup_tiles[:,1].min()
+        max_x = pickup_tiles[:,0].max()
+        max_y = pickup_tiles[:,1].max()
+
+        width_x = max_x - min_x
+        width_y = max_y - min_y
+
+        pt_standard = pickup_tiles.copy()
+        pt_standard[:,0] -= min_x
+        pt_standard[:,1] -= min_y
+
+        arrangement_image = [[dummy for i in range(width_x+1)] for j in range(width_y+1)]
+
+        len_pickup_tiles = len(pickup_tiles)
+        for i in range(len_pickup_tiles):
+            arrangement_image[pt_standard[i,1]][pt_standard[i,0]] = img_list[i]
+
+        concated_image = self._concat_tile_blank(arrangement_image)
+        
+        polyline_image = concated_image.copy()
+        
+        # draw polyline
+        if is_polyline:
+            polyline_coords = np.array(polyline.coords)
+            pixel_coords = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), polyline_coords)))
+
+            # change tile coordinate to pixel coordinate, from min point is (0,0).
+            pixel_coords[:,0] -= min_x * TILE_SIZE[0]
+            pixel_coords[:,1] -= min_y * TILE_SIZE[1]
+            pixel_coords_tuple = tuple(map(tuple, pixel_coords))
+
+            draw = ImageDraw.Draw(polyline_image)
+            draw.line(pixel_coords_tuple, fill=(255, 255, 0), width=10)
+
+        # draw bounds
+        bounds_pixel = bounds[1].copy()
+        # change tile coordinate to pixel coordinate, from min point is (0,0).
+        bounds_pixel[:,0] -= min_x * TILE_SIZE[0]
+        bounds_pixel[:,1] -= min_y * TILE_SIZE[1]
+        
+        if is_bounds:
+            bounds_pixel_drow = np.concatenate([bounds_pixel, bounds_pixel[[0]]], axis=0)
+            bounds_pixel_tuple = tuple(map(tuple, bounds_pixel_drow))
+
+            draw = ImageDraw.Draw(polyline_image)
+            draw.line(bounds_pixel_tuple, fill=(255, 0, 255), width=10)
+        
+        image_cv = self._pil2cv(polyline_image)
+        #image_cv = pil2cv(concated_image)
+        bounds_pixel = bounds_pixel.astype(int)
+
+        croped, mask, dst, dst2 = self.polygon_crop_cv(image_cv, bounds_pixel, mode='all')
+
+        if crop_mode=='all':
+            crop_mode=['croped', 'mask', 'dst', 'dst2']
+        elif crop_mode!='all' and isinstance(crop_mode,str):
+            crop_mode = [crop_mode]
+            
+        if crop_mode==False or crop_mode==None or crop_mode==[]:
+            cv2.imwrite(save_path+'nocroped.png', image_cv)
+        
+        else:        
+            if 'croped' in crop_mode:
+                ## (1) Crop the bounding rect
+                cv2.imwrite(save_path+'croped.png', croped)
+            if 'mask' in crop_mode:
+                ## (2) make mask
+                cv2.imwrite(save_path+'mask.png', mask)
+            if 'dst' in crop_mode:
+                ## (3) do bit-op
+                cv2.imwrite(save_path+'dst.png', dst)
+            if 'dst2' in crop_mode:
+                ## (4) add the white background
+                cv2.imwrite(save_path+'dst2.png', dst2)
+        
+        # for check, return is exist.
+        return polyline_image
+
+
+
+
+
+
