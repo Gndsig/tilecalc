@@ -891,13 +891,12 @@ class LinkingPolylineImage:
         return returns
 
 
-    def concat_tile(self, polyline, bounds, pickup_tiles, file_path, 
+    def concat_tile(self, bounds, pickup_tiles, file_path, 
                            file_extention='.webp', save_path='./',
-                           is_polyline=True, is_bounds=True, crop_mode='dst', zoom='self', TILE_SIZE='self'):
+                           draw_polyline=False, draw_bounds=True, crop_mode='dst', zoom='self', TILE_SIZE='self'):
         """
         A function that collects tiles in bounds and connects the top of 
         the satellite image with the polyline.
-        polyline (shapely.geometry.LineString) : polyline using make bounds.
         bounds (list) : returns for xy_aligned or terminal_node_aligned.
         pickup_tiles (list) : returns for overlappingTile function.
         
@@ -905,8 +904,8 @@ class LinkingPolylineImage:
         file_extention (str) : Extension for tile image files. Probably, '.webp'.
         save_file_path (str) : path for save image file.
         
-        is_polyline (bool) : If True, polyline is drawn.
-        is_bounds (bool) : If True, bounds is drawn.
+        draw_polyline (False or shapely.geometry.LineString) : polyline using make bounds.) If False, polyline is not drawn.
+        draw_bounds (bool) : If True, bounds is drawn.
         crop_mode (list of str) 'croped','mask','dst','dst2' or False: If 'all' 4 all pattern images return.
         dst, black back crop, dst2, white back crop.
         if False, no croped.
@@ -954,7 +953,8 @@ class LinkingPolylineImage:
         polyline_image = concated_image.copy()
         
         # draw polyline
-        if is_polyline:
+        if type(draw_polyline)==shapely.geometry.linestring.LineString:
+            polyline = draw_polyline
             polyline_coords = np.array(polyline.coords)
             pixel_coords = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), polyline_coords)))
 
@@ -965,6 +965,9 @@ class LinkingPolylineImage:
 
             draw = ImageDraw.Draw(polyline_image)
             draw.line(pixel_coords_tuple, fill=(255, 255, 0), width=10)
+        elif draw_polyline==True:
+            raise ValueError('draw_polyline is False or shapely.geometry.linestring.LineString')
+        
 
         # draw bounds
         bounds_pixel = bounds[1].copy()
@@ -972,7 +975,7 @@ class LinkingPolylineImage:
         bounds_pixel[:,0] -= min_x * TILE_SIZE[0]
         bounds_pixel[:,1] -= min_y * TILE_SIZE[1]
         
-        if is_bounds:
+        if draw_bounds:
             bounds_pixel_drow = np.concatenate([bounds_pixel, bounds_pixel[[0]]], axis=0)
             bounds_pixel_tuple = tuple(map(tuple, bounds_pixel_drow))
 
@@ -1041,9 +1044,9 @@ class LinkingPolylineImage:
         
         return convex_rectangle
 
-    def concat_tile_segment(self, polyline, pickup_tiles, pickup_tiles_intersection, file_path, 
+    def concat_tile_segment(self, pickup_tiles, pickup_tiles_intersection, file_path, 
                            file_extention='.webp', save_path='./',
-                           is_polyline=True, is_bounds=True, crop_mode='dst', zoom='self', TILE_SIZE='self'):
+                           draw_polyline=False, draw_bounds=True, crop_mode='dst', zoom='self', TILE_SIZE='self'):
         """
         A function that collects tiles in bounds and connects the top of 
         the satellite image with the polyline.
@@ -1105,7 +1108,8 @@ class LinkingPolylineImage:
         polyline_image = concated_image.copy()
         
         # draw polyline
-        if is_polyline:
+        if type(draw_polyline)==shapely.geometry.linestring.LineString:
+            polyline = draw_polyline
             polyline_coords = np.array(polyline.coords)
             pixel_coords = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), polyline_coords)))
 
@@ -1116,6 +1120,8 @@ class LinkingPolylineImage:
 
             draw = ImageDraw.Draw(polyline_image)
             draw.line(pixel_coords_tuple, fill=(255, 255, 0), width=10)
+        elif draw_polyline==True:
+            raise ValueError('draw_polyline is False or shapely.geometry.linestring.LineString')
 
 
         # ------ draw bounds --------------
@@ -1139,7 +1145,7 @@ class LinkingPolylineImage:
         # It may be necessary to change the common part to another function, but leave it alone.
         
         
-        if is_bounds:
+        if draw_bounds:
             bounds_pixel_drow = np.concatenate([bounds_pixel, bounds_pixel[[0]]], axis=0)
             bounds_pixel_tuple = tuple(map(tuple, bounds_pixel_drow))
 

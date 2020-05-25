@@ -62,12 +62,15 @@ print(pickup_tiles_intersection)
 # np.array([[x11,y11],[x12,y12],[x13,y13]], ...). x11, y11 and x12, y12 is intersections of bounds lines and tiles lines.
 # x13, y13 is bounds corner points in the tiles. If intersections or corner points are not exist, it is in np.nan.
 # elif filepath='anypath', return pickup_tiles, pickup_tiles_intersection, pickup_tiles_list. pickup_tile_list as ['filepath/zoom/x1/y1',...].
-
+#%%
+lpi.concat_tile(bounds, pickup_tiles, \
+        file_path='../datasets/', file_extention='.webp', \
+        save_path='./', draw_polyline=ls2, draw_bounds=True, crop_mode='dst')
 
 #%%
-lpi.concat_tile_segment(polyline, pickup_tiles, pickup_tiles_intersection, \
+lpi.concat_tile_segment(pickup_tiles, pickup_tiles_intersection, \
         file_path='../datasets/', file_extention='.webp', \
-        save_path='./', is_polyline=True, is_bounds=True, crop_mode='dst')
+        save_path='./', draw_polyline=ls2, draw_bounds=True, crop_mode='dst')
 
 
 #%%
