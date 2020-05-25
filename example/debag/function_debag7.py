@@ -64,10 +64,10 @@ pickup_tiles
 # elif filepath='anypath', return pickup_tiles, pickup_tiles_intersection, pickup_tiles_list. pickup_tile_list as ['filepath/zoom/x1/y1',...].
 
 #%%
-lpi.draw_image_at_once(polyline, bounds, pickup_tiles, file_path='../datasets/', save_path='./images/', is_polyline=True, is_bounds=False, crop_mode='dst')
+lpi.concat_tile(polyline, bounds, pickup_tiles, file_path='../datasets/', save_path='./images/', is_polyline=True, is_bounds=False, crop_mode='dst')
 
 #%%
-# draw_image_at_once
+# concat_tile
 self = LinkingPolylineImage()
 polyline
 bounds

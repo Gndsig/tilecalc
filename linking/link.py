@@ -891,7 +891,7 @@ class LinkingPolylineImage:
         return returns
 
 
-    def draw_image_at_once(self, polyline, bounds, pickup_tiles, file_path, 
+    def concat_tile(self, polyline, bounds, pickup_tiles, file_path, 
                            file_extention='.webp', save_path='./',
                            is_polyline=True, is_bounds=True, crop_mode='dst', zoom='self', TILE_SIZE='self'):
         """
@@ -980,8 +980,13 @@ class LinkingPolylineImage:
             draw.line(bounds_pixel_tuple, fill=(255, 0, 255), width=10)
         
         image_cv = self._pil2cv(polyline_image)
-        #image_cv = pil2cv(concated_image)
+
+
+        # bounds is rounded to croped.
+        # That is because, croped bound is rounded bound. But drawn bounds is not rounded.
+        bounds_pixel = bounds_pixel.round()
         bounds_pixel = bounds_pixel.astype(int)
+
 
         croped, mask, dst, dst2 = self.polygon_crop_cv(image_cv, bounds_pixel, mode='all')
 
@@ -1010,7 +1015,172 @@ class LinkingPolylineImage:
         # for check, return is exist.
         return polyline_image
 
+    def to_convex_rectangle(self, rectangle):
+        """
+        Rectangle fixs to convex rectangle. In other words, rearrange the four points of the quadrangle so that they do not intersect.
+        rectangle (2d np.ndarray) : 4 point of np.ndarray. ex. np.array([[0,0],[1,0],[0,1],[1,1]])
+        return : Rearranged 4 point of np.ndarray. ex. np.array([[0,0],[1,0],[1,1],[0,1]])
+        """
+        is_01_23_cross = self.is_intersected_ls(rectangle[0], rectangle[1],
+                                            rectangle[2], rectangle[3])
 
+        is_02_13_cross = self.is_intersected_ls(rectangle[0], rectangle[2],
+                                            rectangle[1], rectangle[3])
+
+        is_03_12_cross = self.is_intersected_ls(rectangle[0], rectangle[3],
+                                            rectangle[1], rectangle[2])
+
+        if is_01_23_cross:
+            convex_rectangle = np.array([rectangle[0], rectangle[2], rectangle[1], rectangle[3]])
+        elif is_02_13_cross:
+            convex_rectangle = np.array([rectangle[0], rectangle[1], rectangle[2], rectangle[3]])
+        elif is_03_12_cross:
+            convex_rectangle = np.array([rectangle[0], rectangle[1], rectangle[3], rectangle[2]])
+        else:
+            raise ValueError('this is not rectangle')
+        
+        return convex_rectangle
+
+    def concat_tile_segment(self, polyline, pickup_tiles, pickup_tiles_intersection, file_path, 
+                           file_extention='.webp', save_path='./',
+                           is_polyline=True, is_bounds=True, crop_mode='dst', zoom='self', TILE_SIZE='self'):
+        """
+        A function that collects tiles in bounds and connects the top of 
+        the satellite image with the polyline.
+        polyline (shapely.geometry.LineString) : polyline using make bounds.
+        pickup_tiles (list) : returns for overlappingTile function.
+        pickup_tiles_intersection (list) : returns for overlappingTileSegment function.
+
+        
+        file_path (str) : path for where there are satellite image tiles. ex. '../datasets/'
+        file_extention (str) : Extension for tile image files. Probably, '.webp'.
+        save_file_path (str) : path for save image file.
+        
+        is_polyline (bool) : If True, polyline is drawn.
+        is_bounds (bool) : If True, bounds is drawn.
+        crop_mode (list of str) 'croped','mask','dst','dst2' or False: If 'all' 4 all pattern images return.
+        dst, black back crop, dst2, white back crop.
+        if False, no croped.
+        
+        zoom (int)[0-18] : zoom level.
+        TILE_SIZE (tuple of int) : The tile size(px). Probably, (256, 256).
+        """
+        if zoom=='self' and hasattr(self, 'zoom'):
+            zoom = self.zoom
+        elif zoom=='self' and not hasattr(self, 'zoom'):
+            raise KeyError('zoom is not found. Please input zoom or in class instance')
+        
+        if TILE_SIZE=='self' and hasattr(self, 'TILE_SIZE'):
+            TILE_SIZE = self.TILE_SIZE
+        elif TILE_SIZE=='self' and not hasattr(self, 'TILE_SIZE'):
+            raise KeyError('TILE_SIZE is not found. Please input TILE_SIZE or in class instance')
+
+        # the last of file_path '/' may or may not be.
+        pickup_tiles_list = self._pickup_file_search(pickup_tiles, zoom, file_path, file_extention)
+
+        # concat image
+        img_list = [Image.open(pickup_tile) for pickup_tile in pickup_tiles_list]
+        dummy = self._make_dummy(img_list[0])
+
+        min_x = pickup_tiles[:,0].min()
+        min_y = pickup_tiles[:,1].min()
+        max_x = pickup_tiles[:,0].max()
+        max_y = pickup_tiles[:,1].max()
+
+        width_x = max_x - min_x
+        width_y = max_y - min_y
+
+        pt_standard = pickup_tiles.copy()
+        pt_standard[:,0] -= min_x
+        pt_standard[:,1] -= min_y
+
+        arrangement_image = [[dummy for i in range(width_x+1)] for j in range(width_y+1)]
+
+        len_pickup_tiles = len(pickup_tiles)
+        for i in range(len_pickup_tiles):
+            arrangement_image[pt_standard[i,1]][pt_standard[i,0]] = img_list[i]
+
+        concated_image = self._concat_tile_blank(arrangement_image)
+        
+        polyline_image = concated_image.copy()
+        
+        # draw polyline
+        if is_polyline:
+            polyline_coords = np.array(polyline.coords)
+            pixel_coords = np.array(list(map(functools.partial(self.latlng_to_pixel, zoom=zoom,is_round=False), polyline_coords)))
+
+            # change tile coordinate to pixel coordinate, from min point is (0,0).
+            pixel_coords[:,0] -= min_x * TILE_SIZE[0]
+            pixel_coords[:,1] -= min_y * TILE_SIZE[1]
+            pixel_coords_tuple = tuple(map(tuple, pixel_coords))
+
+            draw = ImageDraw.Draw(polyline_image)
+            draw.line(pixel_coords_tuple, fill=(255, 255, 0), width=10)
+
+
+        # ------ draw bounds --------------
+        is_bound_tile = np.all(~np.isnan(pickup_tiles_intersection[:,2]), axis=1)
+
+        bounds_tile_num = np.where(is_bound_tile)[0]
+        bounds_position = pickup_tiles_intersection[is_bound_tile][:,2]
+
+        len_bounds = len(bounds_tile_num)  # probably 4
+
+        bounds_pixel = []
+        for i in range(len_bounds):
+            bound = pt_standard[bounds_tile_num[i]] * TILE_SIZE + bounds_position[i]
+            bounds_pixel.append(bound)
+            
+        bounds_pixel = np.array(bounds_pixel)
+        bounds_pixel = self.to_convex_rectangle(bounds_pixel)
+
+        # -------------------------------------
+        # This function is same to concat_tile function except here.
+        # It may be necessary to change the common part to another function, but leave it alone.
+        
+        
+        if is_bounds:
+            bounds_pixel_drow = np.concatenate([bounds_pixel, bounds_pixel[[0]]], axis=0)
+            bounds_pixel_tuple = tuple(map(tuple, bounds_pixel_drow))
+
+            draw = ImageDraw.Draw(polyline_image)
+            draw.line(bounds_pixel_tuple, fill=(255, 0, 255), width=10)
+
+        image_cv = self._pil2cv(polyline_image)
+
+
+        # bounds is rounded to croped.
+        # That is because, croped bound is rounded bound. But drawn bounds is not rounded.
+        bounds_pixel = bounds_pixel.round()
+        bounds_pixel = bounds_pixel.astype(int)
+
+
+        croped, mask, dst, dst2 = self.polygon_crop_cv(image_cv, bounds_pixel, mode='all')
+
+        if crop_mode=='all':
+            crop_mode=['croped', 'mask', 'dst', 'dst2']
+        elif crop_mode!='all' and isinstance(crop_mode,str):
+            crop_mode = [crop_mode]
+            
+        if crop_mode==False or crop_mode==None or crop_mode==[]:
+            cv2.imwrite(save_path+'nocroped.png', image_cv)
+
+        else:        
+            if 'croped' in crop_mode:
+                ## (1) Crop the bounding rect
+                cv2.imwrite(save_path+'croped.png', croped)
+            if 'mask' in crop_mode:
+                ## (2) make mask
+                cv2.imwrite(save_path+'mask.png', mask)
+            if 'dst' in crop_mode:
+                ## (3) do bit-op
+                cv2.imwrite(save_path+'dst.png', dst)
+            if 'dst2' in crop_mode:
+                ## (4) add the white background
+                cv2.imwrite(save_path+'dst2.png', dst2)
+
+        # for check, return is exist.
+        return polyline_image
 
 
 
