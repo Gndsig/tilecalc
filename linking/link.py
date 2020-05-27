@@ -241,19 +241,17 @@ class LinkingPolylineImage:
         """function to Minimum Bounding Rectangle aligned xy axis.
         polyline (shapely.geometry.LineString) : LineString object. If default, use class instance.
         
-        If 'rectangle', return [theta(=0), np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
-        Theta is angle[rad] from x axis, this case is 0.
-        
         minimum (list of [x_min,y_min]) : Minimum width of Minimum Bounding Rectangle. Unit follows output unit.
         buff (list of [x_min, y_min]) : A rectangle buffer. Unit follows output unit.
         
         unit (list of str) [['latlng', 'pixel'], ['pixel', 'pixel'] ] : The first in the list shows the unit of input.
-        THe second in the list shows the unit of output.
-        And minimum unit and buff unit follows the second in the list.
+        THe second in the list shows the unit of output. And minimum unit and buff unit follows the second in the list.
         If unit is ['latlng','pixel'], the inputed polyline unit is longtude and latitude, and return unit is pixel and minimum unit is pixel, 
-        else if unit is latlng, return unit is longtude and latitude, and minimum unit is longtude and latitude.
         
-                form (str)['minmax', 'rectangle'] : If 'minmax', return np.array([[x_min, y_min], [x_max, y_max]]).
+        form (str)['minmax', 'rectangle'] : If 'minmax', return np.array([[x_min, y_min], [x_max, y_max]]).
+        If 'rectangle', return [theta(=0), np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
+        Theta is angle[rad] from x axis, this case is 0.
+        
         
         Finaly, the unit of minimum and return should be unified.
         Warning, If unit is "latlng", later convert "latlng" to "pixel", point of rectangle is a little shift, no more parallelograms.
@@ -337,13 +335,12 @@ class LinkingPolylineImage:
         buff (list of [x_min, y_min]) : A rectangle buffer. Unit follows output unit.
 
         unit (list of str) [['latlng', 'pixel'], ['pixel', 'pixel'] ] : The first in the list shows the unit of input.
-        THe second in the list shows the unit of output.
-        And minimum unit follows the second in the list.
+        THe second in the list shows the unit of output. And minimum unit follows the second in the list.
+        
         If unit is ['latlng','pixel'], the inputed polyline unit is longtude and latitude, and return unit is pixel and minimum unit is pixel, 
         else if unit is latlng, return unit is longtude and latitude, and minimum unit is longtude and latitude.
         
-        Finaly, the unit of minimum and return should be unified.
-        Warning, If unit is "latlng", later convert "latlng" to "pixel", point of rectangle is a little shift, no more parallelograms.
+        Warning, If unit is ['latlng','latlng'], later processing, convert 'latlng' to 'pixel', point of rectangle is a little shift, no more parallelograms.
         
         returns : [theta, np.array([[x_min,y_min],[x_max,y_min],[x_max,y_max],[x_min, y_max]]) ]
         Theta is angle[rad] vector start to end from x axis.
@@ -531,8 +528,7 @@ class LinkingPolylineImage:
         zoom (int)[0-18] : zoom level.
         
         unit (list of str) [['latlng', 'pixel'], ['pixel', 'pixel'] ] : The first in the list shows the unit of input.
-        THe second in the list shows the unit of output.
-        And minimum unit follows the second in the list.
+        THe second in the list shows the unit of output. And minimum unit follows the second in the list.
         If unit is ['latlng','pixel'], the inputed polyline unit is longtude and latitude, and return unit is pixel and minimum unit is pixel, 
         else if unit is latlng, return unit is longtude and latitude, and minimum unit is longtude and latitude.
 
@@ -953,6 +949,9 @@ class LinkingPolylineImage:
         polyline_image = concated_image.copy()
         
         # draw polyline
+        if type(draw_polyline)==str:
+            draw_polyline = shapely.wkt.loads(draw_polyline)
+            
         if type(draw_polyline)==shapely.geometry.linestring.LineString:
             polyline = draw_polyline
             polyline_coords = np.array(polyline.coords)
@@ -1108,6 +1107,9 @@ class LinkingPolylineImage:
         polyline_image = concated_image.copy()
         
         # draw polyline
+        if type(draw_polyline)==str:
+            draw_polyline = shapely.wkt.loads(draw_polyline)
+            
         if type(draw_polyline)==shapely.geometry.linestring.LineString:
             polyline = draw_polyline
             polyline_coords = np.array(polyline.coords)

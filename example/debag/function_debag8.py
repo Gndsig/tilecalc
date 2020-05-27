@@ -20,13 +20,10 @@ ls2 = LineString([(139.07685444335938, 35.9923409624497), (139.07730102539062, 3
 
 polyline = ls2
 
-
 #%%
 lpi = LinkingPolylineImage()
-zoom=18
 
-bounds1 = lpi.xy_aligned(polyline=polyline, form='rectangle', minimum=[], unit=['latlng','pixel'], zoom=zoom)  # if not specify, class instance use.
-bounds1_ = lpi.xy_aligned(polyline=polyline, form='minmax')
+bounds1 = lpi.xy_aligned(polyline=polyline, form='rectangle', minimum=[], unit=['latlng','pixel'])
 bounds2 = lpi.terminal_node_aligned(polyline, unit=['latlng','pixel'], buff=[100,100])
 #bounds2 = pi.terminal_node_aligned()  # if not specify, class instance use.
 print(bounds1)
