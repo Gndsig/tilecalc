@@ -63,8 +63,8 @@ Polygon(bounds2[1])
 
 #%%
 
-bounds = bounds1.copy()
-#bounds = bounds2.copy()
+#bounds = bounds1.copy()
+bounds = bounds2.copy()
 
 # return xy tile coordinate array.
 #def overlappingTiles(self, bounds, unit=['pixel','pixel'], zoom='self', TILE_SIZE='self'):
@@ -120,9 +120,11 @@ a=  """
 
 lpi.concat_tile(bounds, pickup_tiles, \
         file_path='../datasets/', file_extention='.webp', \
-        save_path='./', draw_polyline=ls2, draw_bounds=True, crop_mode='dst')
+        save_path='./', draw_polyline=ls2, draw_bounds=True, \
+        rotate='theta', return_check=True,crop_mode='all')
 
 #%%
 lpi.concat_tile_segment(pickup_tiles, pickup_tiles_intersection, \
         file_path='../datasets/', file_extention='.webp', \
-        save_path='./', draw_polyline=ls2, draw_bounds=True, crop_mode='dst')
+        save_path='./', draw_polyline=False, draw_bounds=True,\
+        rotate='horizontal', return_check=True, crop_mode='dst')
