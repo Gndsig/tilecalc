@@ -121,7 +121,7 @@ a=  """
 lpi.concat_tile(bounds, pickup_tiles, \
         file_path='../datasets/', file_extention='.webp', \
         save_path='./', draw_polyline=ls2, draw_bounds=True, \
-        rotate='theta', return_check=True,crop_mode='all')
+        rotate='horizontal', return_check=True, crop_mode='all')
 
 #%%
 lpi.concat_tile_segment(pickup_tiles, pickup_tiles_intersection, \
